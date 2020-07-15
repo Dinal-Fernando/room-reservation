@@ -1,0 +1,246 @@
+   <!--Top thin-->
+  <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>Rooms available
+          <div class="float-right">
+            <div class="row"><div class="col-6 col-sm-5 col-md-2 col-xl mb-3 mb-xl-0">
+                <button type="button" (click)="addRoomModal.show()" class="btn btn-block btn-primary">Add rooms</button>
+           </div>
+        </div>
+     </div>
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered table-striped">
+            <thead class="table-info">
+              <tr>
+                <th>Room Number </th>
+                <th>Price</th>
+                <th>Activity Status</th>
+                <th>Room Type</th>
+                <th>Edit Room Details</th>
+                <th>Delete Room</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+              *ngFor ="let room of roomList| paginate: { itemsPerPage: pageSize, currentPage: p, totalItems: total }">
+                <td>{{room.room_number}}</td>
+                <td>{{room.price}}</td>
+                <td>
+                  <label class="switch switch-label switch-primary">
+                    <input type="checkbox" class="switch-input" [checked]="room.is_active"
+                      (click)="toggleClicked(room)">
+                    <span class="switch-slider" data-checked="On" data-unchecked="OFF"></span>
+                  </label>
+                </td>
+                <td>{{room.category}}</td>
+                <td>
+                  <button type="button" (click)="updateValues(room)" data-target="#editServiceModal" class="btn btn-primary-new">Update</button>
+                </td>
+                <td>
+                  <button type="button" (click)="deleteValues(room)" data-target="#deleteServiceModal" class="btn btn-primary-new">Delete</button>
+                </td>
+              </tr>
+              <tr *ngIf="roomList.length < 1 && !is_loading">
+                <td colspan="6" class="text-center">There is No rooms upto now!</td>
+              </tr>
+              <tr *ngIf="is_loading">
+                <td colspan="6" class="text-center padding-top">
+                  <div>
+                    <div class="lds-spinner margin-top">
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                    </div>
+                  </div>
+                </td>
+              </tr> 
+            </tbody>
+          </table>
+          <nav>
+            <pagination-controls (pageChange)="pageChanged($event)" responsive="true"
+            (pageBoundsCorrection)="pageChanged($event)" style="float: right">
+          </pagination-controls>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  <!--/.row-->
+
+  <!-- Add rooms Model-->
+  <div bsModal #addRoomModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-primary" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Add Rooms</h4>       
+          <button type="button" class="close" (click)="primaryModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!--Form starts here-->
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <strong>Add rooms</strong> 
+              </div>
+              <!--FORM-->
+              <div class="card-body">
+                <form #addRoomForm="ngForm" (ngSubmit)="onSubmit(addRoomForm)" method="post" enctype="multipart/form-data" class="form-horizontal">
+                  <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="text-input">Room number</label>
+                      <div class="col-md-9">
+                        <input type="text" required #roomNumber="ngModel" [class.is-invalid]="roomNumber.invalid && roomNumber.touched" placeholder="Enter room number" class="form-control" name="roomNumber" ngModel>
+                        <small class="text-danger" [class.d-none]="roomNumber.valid || roomNumber.untouched">Please enter a room number</small>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="text-input">Price</label>
+                      <div class="col-md-9">
+                        <input type="text" required #roomPrice="ngModel" [class.is-invalid]="roomPrice.invalid && roomPrice.touched" placeholder="Enter room price" class="form-control" name="roomPrice" ngModel>
+                        <small class="text-danger" [class.d-none]="roomPrice.valid || roomPrice.untouched">Please enter a price $</small>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="firstName">Is-Active</label>
+                      <div class="col-md-9 col-form-label">
+                          <div class="form-check form-check-inline mr-1" id="inline-radios">
+                            <input class="form-check-input" type="radio" value="true" [(ngModel)]="is_active" name="activity"  [checked]="true"  #activity="ngModel"/>
+                            <label class="form-check-label" for="inlineRadio1">True</label>
+                          </div>
+
+                          <div class="form-check form-check-inline mr-1">
+                            <input class="form-check-input" type="radio" value="false" [(ngModel)]="is_active" name="activity"  #activity="ngModel"/>
+                            <label class="form-check-label" for="inlineRadio2">False</label>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="select1">Room Type</label>
+                    <div class="col-md-9">
+                      <select required #category="ngModel" name="category" [class.invalid]="category.invalid || category.touched" class="form-control" ngModel>
+                        <option value="">Please select</option>
+                        <option *ngFor="let category of categoryList" [value]="category.id">{{category.name}}</option>
+                      </select>
+                      <small class="text-danger" [class.d-none]="category.valid || category.untouched">Please choose a category</small>
+                    </div>
+                  </div>
+              <div class="card-footer">
+                <button type="submit" [disabled]="addRoomForm.form.invalid" class="btn btn-sm btn-primary"><i class="fa fa-dot-circle-o"></i> Submit</button>
+                <button type="reset" class="btn btn-sm btn-danger" (click)="resetForm(addRoomForm)"><i class="fa fa-ban"></i> Reset</button>
+              </div>
+            </form>
+            </div>
+            </div>
+            <!--Form -->
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+  </div>
+
+<!--Is_active update Room popup-->
+<div bsModal #activeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form>
+        <div class="modal-header">
+          <h4 class="modal-title">Change Activation</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+            (click)="cancel()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p>Do you want to change activation?</p>
+        </div>
+        <div class="modal-footer">
+          <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" (click)="cancel()">
+          <input type="submit" class="btn btn-info"  value="Save" (click)="changeActivation()">
+        </div>
+      </form>
+    </div>
+  </div>
+</div><!--category activity-->
+
+<!-- Edit Modal HTML -->
+<div bsModal #editServiceModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form #editRoomForm="ngForm" method="post" enctype="multipart/form-data" class="form-horizontal">
+        <div class="modal-header">
+          <h4 class="modal-title">Edit Room Details</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+            (click)="editServiceModal.hide()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group row">
+           <label class="col-md-3 col-form-label" for="text-input">Room Number</label>
+            <div class="col-md-9">
+            <input type="text" class="form-control" #room_number="ngModel" [(ngModel)]="selected_room_number"
+              [ngModelOptions]="{standalone: true}" name="room_number" placeholder="{{room.room_number}}" required ngModel>
+              <small class="text-danger" [class.d-none]="room_number.valid || room_number.untouched">Please enter a room number</small>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="text-input">Price</label>
+              <div class="col-md-9">
+                <input type="text" required #roomPrice="ngModel" [(ngModel)]="selected_room_price" [class.is-invalid]="roomPrice.invalid && roomPrice.touched" class="form-control" name="roomPrice" ngModel>
+                <small class="text-danger" [class.d-none]="roomPrice.valid || roomPrice.untouched">Please add a price</small>
+              </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="select1">Room Type</label>
+            <div class="col-md-9">
+              <select required #category="ngModel" name="category_id" [(ngModel)]="category_id" [class.invalid]="category.invalid || category.touched" class="form-control" ngModel>
+                <option value="">Please select</option>
+                <option *ngFor="let category of categoryList" [value]="category.id">{{category.name}}</option>
+              </select>
+              <small class="text-danger" [class.d-none]="category.valid || category.untouched">Please choose a category</small>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" (click)="editServiceModal.hide()">
+          <input type="submit" class="btn btn-info" value="Save" [disabled]="editRoomForm.form.invalid" (click)="updateRoomList()">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal HTML -->
+<div bsModal #deleteServiceModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form>
+        <div class="modal-header">
+          <h4 class="modal-title">Delete Room</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+            (click)="deleteServiceModal.hide()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Are you sure you need to delete the room?</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" (click)="deleteServiceModal.hide()">
+          <input type="submit" class="btn btn-info" value="Yes" (click)="deleteRoomList()">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

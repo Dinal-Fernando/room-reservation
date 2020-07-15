@@ -1,0 +1,59 @@
+<div class="app-body">
+  <main class="main d-flex align-items-center">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8 mx-auto">
+          <div class="card-group">
+            <div class="card p-4">
+              <div class="card-body">
+                <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)" enctype="multipart/form-data" class="form-horizontal">
+                  <h1>Login</h1>
+                  <p class="text-muted">Sign In to your account</p>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="icon-user"></i></span>
+                    </div>
+                    <input type="username" #username="ngModel" name="username"  [class.is-invalid]="username.invalid && username.touched" placeholder="Enter username" class="form-control" ngModel>
+                    <small class="text-danger" [class.d-none]="username.valid || username.untouched">Email is required</small>
+                  </div>
+                  <div class="input-group mb-4">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="icon-lock"></i></span>
+                    </div>
+                    <input type="password" #password="ngModel" name="password"  [class.is-invalid]="password.invalid && password.touched" placeholder="Enter Password" class="form-control" autocomplete="current-password" ngModel>
+                    <small class="text-danger" [class.d-none]="password.valid || password.untouched">Password is required</small>
+                  </div>
+                  <div class="row">
+                    <div class="col-6">
+                      <button [disabled]= "loginForm.form.invalid" type="submit" data-dismiss="modal" class="btn btn-sm btn-primary">Login</button>
+                    </div>
+                    <div class="col-6 text-right">
+                      <button type="button" (click)="forgotPasswordForm(loginForm)" class="btn btn-link px-0">Forgot password?</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="col-6 animation-div" *ngIf=is_loading>
+  <div class="lds-spinner">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+</div>

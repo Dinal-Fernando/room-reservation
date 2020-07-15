@@ -1,0 +1,219 @@
+
+  <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i>Room Categories
+          <div class="float-right">
+            <div class="row">
+              <div class="col-6 col-sm-5 col-md-2 col-xl mb-3 mb-xl-0">
+                <button type="button" (click)="primaryModal.show()" class="btn btn-block btn-primary">Add category</button>
+              </div>
+           </div>
+     </div>
+        </div>
+        <div class="card-body">
+          <table class="table  table-striped">
+            <thead class="table-info">
+              <tr>
+                <th>Category Name</th>
+                <th>Category Activity</th>
+                <th>Edit Category</th>
+                <th>Delete Category</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr 
+                *ngFor ="let category of categoryList| paginate: { itemsPerPage: pageSize, currentPage: p, totalItems: total }">
+                <td>{{ category.name }}</td>
+                <td>
+                  <label class="switch switch-label switch-primary">
+                    <input type="checkbox" class="switch-input" [checked]="category.is_active"
+                      (click)="toggleClicked(category)">
+                    <span class="switch-slider" data-checked="On" data-unchecked="OFF"></span>
+                  </label>
+                </td>
+                <td>
+                  <button type="button" (click)="updateValues(category)" data-target="#editServiceModal" class="btn btn-primary-new">Update</button>
+                </td>
+                <td>
+                  <button type="button" (click)="deleteValues(category)" data-target="#deleteServiceModal" class="btn btn-primary-new">Delete</button>
+                </td>
+            </tr>
+            <tr *ngIf="categoryList.length < 1 && !is_loading">
+              <td colspan="6" class="text-center">There is No Service Categories upto now!</td>
+            </tr>
+            <tr *ngIf="is_loading">
+              <td colspan="6" class="text-center padding-top">
+                <div>
+                  <div class="lds-spinner margin-top">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
+                </div>
+              </td>
+            </tr> 
+            </tbody>
+          </table>
+          <pagination-controls (pageChange)="pageChanged($event)" responsive="true"
+      (pageBoundsCorrection)="pageChanged($event)" style="float: right">
+    </pagination-controls>
+        </div>
+      </div>
+    </div>
+
+  <!--Pop up Model  Add category-->
+  <div bsModal #primaryModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-primary" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Add Bookings</h4>       
+          <button type="button" class="close" (click)="primaryModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+            <div class="modal-body">
+              <div class="col-md-12">
+                    <!--Form starts here-->
+                  <div class="card">
+                    <div class="card-header">
+                      <strong>Booking</strong> Form
+                    </div>
+                      <!--FORM-->
+                    <div class="card-body">
+                    <form #categoryForm="ngForm" (ngSubmit)="onSubmit(categoryForm)" enctype="multipart/form-data" class="form-horizontal" >
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="categoryName">Category Name</label>
+                        <div class="col-md-9">
+                            <input type="text" required #categoryName="ngModel" name="categoryName" [ngModel]="category.name" [class.is-invalid]="categoryName.invalid && categoryName.touched" placeholder="Enter categor name" class="form-control" ngModel>
+                            <small class="text-danger" [class.d-none]="categoryName.valid || categoryName.untouched">Category name is required</small>
+                        </div> 
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="firstName">Is-Active</label>
+                        <div class="col-md-9 col-form-label">
+                            <div class="form-check form-check-inline mr-1" id="inline-radios">
+                              <!-- <input class="form-check-input" type="radio" name="inline-radios" id="true" name="inline-radios"> -->
+                              <input class="form-check-input" type="radio" value="true" [(ngModel)]="is_active" name="activity"  [checked]="true"  #activity="ngModel" />
+                              <label class="form-check-label" for="inlineRadio1">True</label>
+                            </div>
+                            <div class="form-check form-check-inline mr-1">
+                              <input class="form-check-input" type="radio" value="false" [(ngModel)]="is_active" name="activity" #activity="ngModel"/>
+                              <label class="form-check-label" for="inlineRadio2">False</label>
+                            </div>
+                        </div>
+                    </div>
+                    <button [disabled]= "categoryForm.form.invalid" type="submit" data-dismiss="modal" class="btn btn-sm btn-primary"><i class="fa fa-dot-circle-o"></i> Submit</button>
+                    <button type="reset" class="btn btn-sm btn-danger"><i class="fa fa-ban" (click)="resetCategoryForm(categoryForm)"></i> Reset</button>
+              </form>
+        </div>
+        </div>
+      </div>
+     </div>
+   </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!--Is_active update Category popup-->
+<div bsModal #activeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form>
+        <div class="modal-header">
+          <h4 class="modal-title">Change Activation</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+            (click)="cancel()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p>Do you want to change activation?</p>
+        </div>
+        <div class="modal-footer">
+          <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" (click)="cancel()">
+          <input type="submit" class="btn btn-info" value="Save" (click)="changeActivation()">
+        </div>
+      </form>
+    </div>
+  </div>
+</div><!--category activity-->
+
+<!-- Delete Modal HTML -->
+<div bsModal #deleteServiceModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form>
+        <div class="modal-header">
+          <h4 class="modal-title">Delete Category</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+            (click)="deleteServiceModal.hide()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Are you sure you need to delete the category?</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel"
+            (click)="deleteServiceModal.hide()">
+          <input type="submit" class="btn btn-info" value="Yes" (click)="deleteCategoryList()">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal HTML -->
+<div bsModal #editServiceModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form>
+        <div class="modal-header">
+          <h4 class="modal-title">Edit Category Details</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+            (click)="editServiceModal.hide()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Category Name</label>
+            <input type="text" class="form-control" [(ngModel)]="selected_category_name"
+              [ngModelOptions]="{standalone: true}" name="category_name" required>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel"
+            (click)="editServiceModal.hide()">
+          <input type="submit" class="btn btn-info" value="Save" (click)="updateCategoryList()">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- 
+<div class="col-6 animation-div2" *ngIf="is_page_loading">
+  <div class="lds-spinner">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+  </div>
+</div> -->
