@@ -299,9 +299,8 @@ export class DayComponent implements OnInit {
               err => {        
                 console.log(err);
               }
-            );
-          }
-
+            );      
+        }
 
       getCheckInTIme(index){
         var todaysDatee = new Number(new Date());
@@ -311,9 +310,9 @@ export class DayComponent implements OnInit {
         this.check_in = checkin;       
         if(Date.parse(this.check_in) < todaysDatee ){
           this.getContactsFormGroup(index).controls['checkin'].value == null
-          this.toastr.error('Oops! Make sure date is not a past date and before current time');  
+          this.toastr.error('Oops! Make sure date is not a past date and after current time');  
           this.getContactsFormGroup(index).controls['checkin'].reset()
-        }else if(checkout < checkin){
+        }else if((checkout < checkin) && (checkout !=null) && (checkout !="") ){
           this.toastr.error('Oops! Make sure check out time is after check in time');  
           this.getContactsFormGroup(index).controls['checkin'].reset()
         }else if(!(roomid == "" ||roomid == null ) && !(checkin == ""||checkin == null) && !(checkout == ""||checkout == null)){
@@ -340,7 +339,6 @@ export class DayComponent implements OnInit {
           );
           }
        }
-
 
       getCheckOutTIme(index){
         var todaysDatee = new Number(new Date());
