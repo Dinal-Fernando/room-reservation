@@ -24,7 +24,7 @@ export class CommonServicesService {
   }
 
   postData(url,body) {
-    let headers = this.getHeaders() //
+    let headers = this.getHeaders()
     console.log("body"+JSON.stringify(body));
     return this.http.post(environment.apiBaseUrl+url,JSON.stringify(body),{ headers: headers})
     .toPromise()

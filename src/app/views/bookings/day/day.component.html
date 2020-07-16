@@ -131,33 +131,42 @@
                                 [ngModelOptions]="{standalone: true}" name="price" placeholder="{{detail.price}}" [disabled]="true" ngModel/>                  
                               </div>
                             </div>
+                            <div>
+                              <strong>Total: </strong>
+                              <div class="form-group">
+                                <input type="text" #total="ngModel" [(ngModel)]="total_detail_price" id="nf-client-price" name="total_price" class="form-control" [disabled]="true" ngModel>
+                              </div>
+                            </div> 
+                            <div>
+                            <label>Checked Out? </label> 
+                              <div class="form-group">
+                              <label class="switch switch-label switch-primary">
+                                <input type="checkbox" class="switch-input" [checked]="selected_check_checkedout" [disabled]="selected_check_checkedout"
+                                  (click)="toggleClickedCheckOut(detail.id)">
+                                <span class="switch-slider" data-checked="Yes" data-unchecked="NO"></span>
+                              </label>
+                            </div>
+                            </div> 
+                            <div>
+                              <label>Cancelled? </label> 
+                                <div class="form-group">
+                                <label class="switch switch-label switch-primary">
+                                  <input type="checkbox" class="switch-input" [checked]="selected_check_cancelled" [disabled]="selected_check_cancelled" 
+                                    (click)="toggleClickedCancel(detail.id,reasonValue)">
+                                  <span class="switch-slider" data-checked="Yes" data-unchecked="NO"></span>
+                                </label>
+                              </div>
+                            </div>
+                            <div  *ngIf="show">
+                              <label>Reason for cancel? </label> 
+                                <div class="form-group">
+                                <label class="col-md-9">
+                                  <input type="text" class="form-control" name="reason" [(ngModel)]="selected_add_reason" placeholder="Enter a reson for cancelling..." ngModel/>                  
+                                </label>
+                                <button type="button" (click)="cancelReason(detail.id)" class="btn btn-block btn-primary">Cancel Booking</button>
+                              </div>
+                            </div>
                           </div>     
-                      <div>
-                        <strong>Total: </strong>
-                        <div class="form-group">
-                          <input type="text" #total="ngModel" [(ngModel)]="total_detail_price" id="nf-client-price" name="total_price" class="form-control" [disabled]="true" ngModel>
-                        </div>
-                      </div> 
-                      <div>
-                      <label>Checked Out? </label> 
-                        <div class="form-group">
-                        <label class="switch switch-label switch-primary">
-                          <input type="checkbox" class="switch-input" [checked]="selected_check_checkedout"
-                            (click)="toggleClickedCheckOut()">
-                          <span class="switch-slider" data-checked="Yes" data-unchecked="NO"></span>
-                        </label>
-                      </div>
-                      </div> 
-                      <div>
-                        <label>Cancelled? </label> 
-                          <div class="form-group">
-                          <label class="switch switch-label switch-primary">
-                            <input type="checkbox" class="switch-input" [checked]="selected_check_cancelled"
-                              (click)="toggleClickedCancel()">
-                            <span class="switch-slider" data-checked="Yes" data-unchecked="NO"></span>
-                          </label>
-                        </div>
-                      </div>
                     </div>
                     <div class="card-footer">
                     <!-- <div class="col-4">

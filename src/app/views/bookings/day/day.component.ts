@@ -133,7 +133,9 @@ export class DayComponent implements OnInit {
       reservation_date: any;
       roomy
       selectedOption: any;
-
+      show: boolean;
+      selected_add_reason: any;
+  checkoutDisabled: any;
 
       constructor(
         private roomService:RoomsService,
@@ -220,17 +222,66 @@ export class DayComponent implements OnInit {
         this.detailsForm.controls['total'].setValue(this.sum);
         console.log( this.detailsForm.controls['total'].setValue(this.sum));
       }
-      toggleClickedCheckOut(){
-        this.detailModal.hide();
 
-      }
-      checkoutBooking(event){
+      toggleClickedCheckOut(event){
+        if(this.selected_check_checkedout){
+          alert("Client is already checked out. Checkout cannot be undone.")
+          
+        }else{
+        this.is_loading = true
         console.log(event)
-        let model:{
-    
+        let model ={
+          id:event
         }
-        //this.bookingService.cancel(model)
+        if (confirm('Are you sure you want to checkout ? Note: This cannot be undone!')) {
+          this.bookingService.checkout(model).then(
+            res => {
+              this.is_loading = false
+              if (res['success']) {
+                this.toastr.success("Client Checked Out !!");
+              }else{
+                this.toastr.error("Something not right!");
+              }
+            });
+        } else {
+          this.toastr.success("Checkout cancelled !!");
+        }
+          this.detailModal.hide();
+        }
       }
+
+      toggleClickedCancel(){
+        if(this.selected_check_cancelled){
+          alert("Oops !The booking is already cancelled!!");   
+        }else{
+        this.show = !this.show;
+        }
+      }
+
+      cancelReason(selectedID){
+        this.is_loading = true
+        let model={
+          id :selectedID,
+          cancel_reason:this.selected_add_reason
+        }
+        if (confirm('Are you sure you want to cancel booking ? Note: This cannot be undone!')) {
+          this.bookingService.cancel(model).then(
+            res => {
+              this.is_loading = false
+              if (res['success']) {
+                this.toastr.success(" Booking cancelled!!");
+                this.show = !this.show;
+              }else{
+                this.toastr.error("Something not right!");
+                this.show = !this.show;
+              }
+            });
+        } else {
+          this.toastr.success("Cancellation stopped!!");
+        }
+          this.detailModal.hide(); 
+        }
+
           getRoomsList() {
             this.roomService.getRooms(1, 1000).then(
               res => {
@@ -254,38 +305,87 @@ export class DayComponent implements OnInit {
 
       getCheckInTIme(index){
         var todaysDatee = new Number(new Date());
-        const checkin= this.getContactsFormGroup(index).controls['checkin'].value
-        this.check_in = checkin;       
-        if(Date.parse(this.check_in)< todaysDatee ){
-          this.getContactsFormGroup(index).controls['checkin'].value == null
-          this.toastr.error('Oops! Make sure date is not a past date');     
-        }
-      }
-
-      getCheckOutTIme(index){
         var roomid = this.getContactsFormGroup(index).controls['room'].value
         var checkin =   this.getContactsFormGroup(index).controls['checkin'].value
-        var checkout =  this.getContactsFormGroup(index).controls['checkout'].value
-        this.check_out = index;
-        let model = {
-          room    : roomid,
-          checkin : checkin,
-          checkout: checkout
-        }    
-        this.bookingService.checkCheckInOutTime(model).then(
-          res => {
-            this.is_loading = false
-            if (res['validity']) {
-              this.toastr.success('Room is available!');
-            } else {
-              this.toastr.error('Oops!There is a booking made at this time');
+        var checkout =  this.getContactsFormGroup(index).controls['checkout'].value   
+        this.check_in = checkin;       
+        if(Date.parse(this.check_in) < todaysDatee ){
+          this.getContactsFormGroup(index).controls['checkin'].value == null
+          this.toastr.error('Oops! Make sure date is not a past date and before current time');  
+          this.getContactsFormGroup(index).controls['checkin'].reset()
+        }else if(checkout < checkin){
+          this.toastr.error('Oops! Make sure check out time is after check in time');  
+          this.getContactsFormGroup(index).controls['checkin'].reset()
+        }else if(!(roomid == "" ||roomid == null ) && !(checkin == ""||checkin == null) && !(checkout == ""||checkout == null)){
+          let model = {
+            room    : roomid,
+            checkin : checkin,
+            checkout: checkout
+          } 
+          this.bookingService.checkCheckInOutTime(model).then(
+            res => {
+              this.is_loading = false
+              if (res['validity']) {
+                this.toastr.success('Room is available!');
+              } else {
+                this.toastr.error('Oops!There is a booking made at this time');
+                this.getContactsFormGroup(index).controls['checkin'].reset()
+                this.getContactsFormGroup(index).controls['checkout'].reset()
+              }
+            },
+            err => {
+              this.is_loading = false
+              this.toastr.error('Oops! Internal Server Error');
             }
-          },
-          err => {
-            this.is_loading = false
-            this.toastr.error('Oops! Internal Server Error');
+          );
           }
-        );
+       }
+
+
+      getCheckOutTIme(index){
+        var todaysDatee = new Number(new Date());
+        var roomid = this.getContactsFormGroup(index).controls['room'].value
+        var checkin =   this.getContactsFormGroup(index).controls['checkin'].value
+        var checkout =  this.getContactsFormGroup(index).controls['checkout'].value   
+        this.check_in = checkin;
+        console.log(todaysDatee)  
+        console.log((Date.parse(checkout)))     
+        if(Date.parse(checkout) < todaysDatee) {
+          this.toastr.error('Oops! Make sure date is not a past date');  
+          this.getContactsFormGroup(index).controls['checkout'].reset()
+        }else if(checkout < checkin){
+          this.toastr.error('Oops! Make sure check out time is after check in time');  
+          this.getContactsFormGroup(index).controls['checkout'].reset()
+        }else
+        if(!(roomid == "" ||roomid == null ) && !(checkin == ""||checkin == null) && !(checkout == ""||checkout == null)){
+          var roomid = this.getContactsFormGroup(index).controls['room'].value
+          var checkin =   this.getContactsFormGroup(index).controls['checkin'].value
+          var checkout =  this.getContactsFormGroup(index).controls['checkout'].value   
+          if(!(roomid == "" || checkin == null || checkout == null)){
+            let model = {
+              room    : roomid,
+              checkin : checkin,
+              checkout: checkout
+            }    
+            this.bookingService.checkCheckInOutTime(model).then(
+              res => {
+                this.is_loading = false
+                if (res['validity']) {
+                  this.toastr.success('Room is available!');
+                } else {
+                  this.toastr.error('Oops!There is a booking made at this time');
+                  this.getContactsFormGroup(index).controls['checkin'].reset()
+                  this.getContactsFormGroup(index).controls['checkout'].reset() 
+                }
+              },
+              err => {
+                this.is_loading = false
+                this.toastr.error('Oops! Internal Server Error');
+              }
+          );
+        }
+      }
+        
       }
 
       getRoomID(index){
@@ -305,7 +405,37 @@ export class DayComponent implements OnInit {
           if(this.roomList[i].id == event){
               this.details().controls[id].get('price').setValue(this.roomList[i].price)
             }
-        }       
+        } 
+        var roomid = this.getContactsFormGroup(id).controls['room'].value
+        var checkin =   this.getContactsFormGroup(id).controls['checkin'].value
+        var checkout =  this.getContactsFormGroup(id).controls['checkout'].value   
+        this.check_in = checkin;      
+        if(checkin == ""  ){
+          console.log("trie")
+        } 
+         if(!(roomid == "" ||roomid == null ) && !(checkin == ""||checkin == null) && !(checkout == ""||checkout == null)){
+          let model = {
+            room    : roomid,
+            checkin : checkin,
+            checkout: checkout
+          } 
+          this.bookingService.checkCheckInOutTime(model).then(
+            res => {
+              this.is_loading = false
+              if (res['validity']) {
+                this.toastr.success('Room is available!');
+              } else {
+                this.toastr.error('Oops!There is a booking made at this time');
+                this.getContactsFormGroup(id).controls['checkin'].reset()
+                this.getContactsFormGroup(id).controls['checkout'].reset() 
+              }
+            },
+            err => {
+              this.is_loading = false
+              this.toastr.error('Oops! Internal Server Error');
+            }
+          );
+        }      
       }
 
     public addInputElement(): void{
@@ -450,7 +580,8 @@ export class DayComponent implements OnInit {
 
           this.selected_date = info.event.date
           this.selected_check_checkedout = this.EventDetail[0]["is_checkedout"]
-          this.selected_check_cancelled = this.EventDetail[0]["is_cancelled"]
+          this.selected_check_cancelled = this.EventDetail[0]["is_canceled"]
+
           this.EventDetail.forEach(data=>{
             data.details.forEach(detailsbookinglist=>{
               this.DetailsBookingList.push(detailsbookinglist); 

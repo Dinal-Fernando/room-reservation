@@ -104,7 +104,6 @@ export class ReportsComponent implements OnInit {
       doc.output('dataurlnewwindow');
     }
   
-  
     public downloadPDF():void {
       let DATA = this.htmlData.nativeElement;
       let doc = new jsPDF('p','pt', 'a4');
