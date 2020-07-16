@@ -39,7 +39,9 @@ export class DayComponent implements OnInit {
     @ViewChild('detailModal') public detailModal: ModalDirective;
     @ViewChild('activeModal') public activeModal: ModalDirective;
     @ViewChild('external') external: ElementRef;
-      
+    @ViewChild('checkoutModal') public checkoutModal: ModalDirective;
+
+      public innerWidth: any;
       calendarVisible = true;
       calendarPlugins = [dayGridPlugin, timeGrigPlugin, interactionPlugin,listPlugin,resourceTimelinePlugin,bootstrapPlugin];
       calendarWeekends = true;
@@ -75,16 +77,7 @@ export class DayComponent implements OnInit {
 
       is_loading = false
       is_page_loading = false;
-      inputelement: any;
-      inputelementcheckin: any;
-      inputelementcheckout: any;
-      eventBgColor: string;
       height: number;
-      contentHeight: number;
-      resourceAreaWidth: number; 
-      eventStartEditable: boolean;
-      eventDurationEditable: boolean;
-      dragRevertDuration: boolean;
       defaultView: string;
       showModal: boolean;
       eventLimit: true;
@@ -164,6 +157,7 @@ export class DayComponent implements OnInit {
 
 
       ngOnInit(){
+        this.innerWidth = window.innerWidth;
         this.getRoomsList();
         this.getEventList(); 
         console.log(this.roomy)
@@ -226,58 +220,17 @@ export class DayComponent implements OnInit {
         this.detailsForm.controls['total'].setValue(this.sum);
         console.log( this.detailsForm.controls['total'].setValue(this.sum));
       }
-        // //When u select some space in the calendar do the following:
-        // select= function (start, end, allDay) {
-        //   //do something when space selected
-        //   //Show 'add event' modal
-        //   $('#createEventModal').modal('show');
-        // }
+      toggleClickedCheckOut(){
+        this.detailModal.hide();
 
-        // //When u drop an event in the calendar do the following:
-        // eventDrop= function (event, delta, revertFunc) {
-        //     //do something when event is dropped at a new location
-        // }
-
-        // //When u resize an event in the calendar do the following:
-        // eventResize= function (event, delta, revertFunc) {
-        //     //do something when event is resized
-        // }
-
-        // eventRender= function(event, element) {
-        //     $(element).tooltip({title: event.title});             
-        // }
-
-        // addMore() {
-        //   this.inputelements.push({roomNumber: '',checkin:'',checkout:''});
-        // }
-
-     
-        // get demoArray() {
-        //   return this.demoForm.get('demoArray') as FormArray;
-        // }
-        
-        // addItem(item) {
-        //     this.arrayItems.push(item);
-        // }
-
-        // removeItem() {
-        //     this.arrayItems.pop();
-        //     this.demoArray.removeAt(this.demoArray.length - 1);
-        // }
-
-        // registrationForm = this.fb.group({
-        //   addDynamicElement: this.fb.array([])
-        // })
-
-          //   /*############### Add Dynamic Elements ###############*/
-          //   get addDynamicElement() {
-          //     return this.registrationForm.get('addDynamicElement') as FormArray
-          //   }
-
-          // addItems() {
-          //   this.addDynamicElement.push(this.fb.control(''))
-          // }
-
+      }
+      checkoutBooking(event){
+        console.log(event)
+        let model:{
+    
+        }
+        //this.bookingService.cancel(model)
+      }
           getRoomsList() {
             this.roomService.getRooms(1, 1000).then(
               res => {
@@ -481,7 +434,7 @@ export class DayComponent implements OnInit {
           for(let i=0; i <= this.DetailsBookingList.length ;i++){
             this.DetailsBookingList.pop();
           }
-          
+
           this.is_loading = false
           this.EventDetail = res['data'];
           console.log(this.EventDetail);

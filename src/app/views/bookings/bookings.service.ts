@@ -30,4 +30,13 @@ export class BookingsService {
     getBookingEventByDate(from, to){
       return this.commonService.getData('reservation/getreport/?first_date='+from+'&second_date='+to);
     }
+
+    checkout(model){
+      return this.commonService.postData('reservation/checkedout/',model);
+    }
+    
+    cancel(model){
+      return this.commonService.postData('reservation/cancel/',model);
+    }
+
 }

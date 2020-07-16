@@ -36,42 +36,49 @@
       <div class="card-body">
         <div class="col-md-8" id="htmlData" #htmlData>
           <div *ngFor ="let clients of reports" >
-            <div class="form-group row">
+              <div class="col-7">
+                <div class="form-group">
+                  <label >Employee Name: </label> <strong>{{clients.user}}</strong>
+                </div>
+              </div>
               <div class="col-7">
                 <div class="form-group">
                   <label >Client Name: </label> <strong>{{clients.client}}</strong>
                 </div>
               </div>
-            </div>
-            <div class="form-group row">
               <div class="col-7">
                 <div class="form-group">
-                  <label >Reservation Date:</label> <strong>{{clients.date}}</strong>
+                  <label>Date reservation made:</label> <strong>{{clients.reservation_date}} {{clients.reservation_time}}</strong>
                 </div>
               </div>
-            </div>
-            <div class="form-group row">
               <div class="col-7">
                 <div class="form-group">
                   <label >Mobile :</label> <strong>{{clients.mobile}}</strong>
                 </div>
               </div>
-            </div>
-            <div class="form-group row">
+              <div class="col-7">
+                <div class="form-group">
+                  <label >Booking checked out?  :</label> <strong>{{clients.is_checkedout}}</strong>
+                </div>
+              </div>       
+              <div class="col-7">
+                <div class="form-group">
+                  <label >Booking cancelled? :</label> <strong>{{clients.is_canceled}}</strong>
+                </div>
+              </div>
               <div class="col-7">
                 <div class="form-group">
                   <label >Total :</label> <strong>{{clients.total}}</strong>
                 </div>
               </div>
-            </div>
             <div class="form-group row">
               <table class="table  table-striped">
                 <thead class="table-info">
                   <tr>
-                    <th>Room Number</th>
-                    <th>Booking Check In Time</th>
-                    <th>Booking Check Out Time</th>
-                    <th>Room Price</th>
+                    <th>Room </th>
+                    <th>Check In Time</th>
+                    <th>Check Out Time</th>
+                    <th>Price</th>
                   </tr>
                 </thead>
                 <tbody>

@@ -101,7 +101,7 @@
      </div>
         </div>
         <div class="card-body">
-          <table class="table table-bordered table-striped">
+          <table class="table table-striped">
             <thead class="table-info">
               <tr>
                 <th>Username</th>
@@ -110,7 +110,7 @@
                 <th>Email</th>
                 <th>Activity Status</th>
                 <th>Role</th>
-                <th>Password</th>
+                <!-- <th>Password</th> -->
                 <th>Update User</th>
                 <!-- <th>Delete User</th> -->
               </tr>
@@ -130,7 +130,7 @@
                 </label>
               </td>
               <td>{{ user.type }}</td>
-              <td>{{ user.password }}</td>
+              <!-- <td>{{ user.password }}</td> -->
               <td>
                 <button type="button" (click)="updateValues(user)" data-target="#editServiceModal" class="btn btn-primary-new">Update</button>
               </td>

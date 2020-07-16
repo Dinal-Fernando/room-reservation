@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { Http } from '@angular/http';
 import { HttpClient } from '@angular/common/http';
 import { EmployeeService } from './employee.service';
@@ -37,6 +37,9 @@ export class AddEmployeeComponent implements OnInit {
   //user = new Employee();
   userList:any[];
 
+  scrHeight:any;
+  scrWidth:any;
+
   is_loading = false
   is_page_loading = false
   selected_user_name: any;
@@ -61,6 +64,20 @@ export class AddEmployeeComponent implements OnInit {
     this.currentPageLoad();
   }
 
+  @HostListener("window:resize", [])
+  public onResize() {
+    this.detectScreenSize();
+  }
+  
+  public ngAfterViewInit() {
+      this.detectScreenSize();
+  }
+  
+  private detectScreenSize() {
+      const height = window.innerHeight;
+      const width = window.innerWidth;
+  }
+  
   currentPageLoad(){
     let page_no = 1;
     let url_page =this.route.snapshot.params.page;

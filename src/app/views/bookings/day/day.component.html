@@ -32,12 +32,9 @@
               selectHelper  ="true"
               navLinks      ="true"
               editable      ="true"
-              (eventResize) ="updateEvent($event.detail)"
               (clickButton) ="clickButton($event.detail)"
               (eventClick)  ="eventClick($event)" 
-              (eventDrop)   ="updateEvent($event.detail)"
               (clickButton) ="clickButton($event.detail)"
-              themeSystem   ="bootstrap"
               navLinks      ="true"
               eventColor    ='#378006'
             ></full-calendar>
@@ -333,7 +330,7 @@
 
                         
             <!--Cancel booking Model-->
-            <div bsModal #activeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+            <!-- <div bsModal #activeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
             aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
@@ -348,13 +345,36 @@
                     </div>
                     <div class="modal-footer">
                       <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" (click)="cancel()">
-                      <input type="submit" class="btn btn-info"  value="Save" (click)="cancelBooking()">
+                      <input type="submit" class="btn btn-info"  value="Save" (click)="cancelBooking($event)">
                     </div>
                   </form>
                 </div>
               </div>
-            </div><!--category activity-->
+            </div>category activity -->
 
+        <!--Cancel booking Model-->
+        <div bsModal #checkoutModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <form>
+                <div class="modal-header">
+                  <h4 class="modal-title">Checkout </h4>
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                    (click)="cancel()">&times;</button>
+                </div>
+                <div class="modal-body">
+                  <p>Are you sure you want to checkout? Hoping to see you soon!!</p>
+                </div>
+                <div class="modal-footer">
+                  <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" (click)="cancel()">
+                  <input type="submit" class="btn btn-info"  value="Save" (click)="checkoutBooking($event)">
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <!--category activity -->
           </div>
         </div>
       </div>
