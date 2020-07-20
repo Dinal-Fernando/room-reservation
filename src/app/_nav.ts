@@ -1,15 +1,15 @@
 import { INavData } from '@coreui/angular';
 
 export const navItems: INavData[] = [
- /* {
+{
     name: 'Dashboard',
     url: '/dashboard',
     icon: 'icon-speedometer',
     badge: {
       variant: 'info',
-      text: 'NEW'
+      text: 'DAILY INFO'
     }
-  },*/
+  },
   {
     title: true,
     name: 'Bookings'
@@ -31,29 +31,25 @@ export const navItems: INavData[] = [
   },*/
   {
     title: true,
-    name: 'Rooms'
+    name: 'Room Management'
   },
   {
-    name: 'Room Management',
+    name: 'Add Room ',
     url: '/add-space/add-spacce',
     icon: 'icon-pencil'
   },
   {
-    title: true,
-    name: 'Employees'
-  },
-  {
-    name: 'Add Employee',
-    url: '/employee/add-employee',
+    name: 'Add Category',
+    url: '/category/category',
     icon: 'icon-pencil'
   },
   {
     title: true,
-    name: 'Category'
+    name: 'Employee Management'
   },
   {
-    name: 'Add Category',
-    url: '/category/category',
+    name: 'Add New Employees',
+    url: '/employee/add-employee',
     icon: 'icon-pencil'
   },
   {

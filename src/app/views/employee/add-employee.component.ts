@@ -44,6 +44,7 @@ export class AddEmployeeComponent implements OnInit {
   is_page_loading = false
   selected_user_name: any;
   selected_user: any;
+  clicked = false;
   password: any;
   token: any;
   selected_user_id: any;
@@ -51,7 +52,7 @@ export class AddEmployeeComponent implements OnInit {
   selescted_last_name: any;
   selected_user_email: any;
   selected_user_type: any;
- 
+  toggleDisable = false
   constructor(
     public  http: Http,
     private router: Router,
@@ -139,17 +140,20 @@ export class AddEmployeeComponent implements OnInit {
         this.is_page_loading = false
         if (res['success']) {
           this.toastr.success('Thankyou for registering with us! We have sent an email to activate account!');
+          this.clicked = false
           form.resetForm();
           this.primaryModal.hide();
           this.currentPageLoad();
         } else {
           this.toastr.error('Oops! Cannot add category at this moment please try again later');
+          this.clicked = false
           this.currentPageLoad();
         }
       },
       err => {
         this.is_page_loading = false
         this.toastr.error('Oops! Internal Server Error');
+        this.clicked = false
       }
     );
   }
@@ -185,15 +189,18 @@ export class AddEmployeeComponent implements OnInit {
         this.is_page_loading = false
         if (res['success']) {
           this.toastr.success('Successfully Updated!');
+          this.clicked = false
           this.editServiceModal.hide();
           this.currentPageLoad() 
         } else {
           this.toastr.error('Oh Snap! Can not update item at this moment please try again later');
+          this.clicked = false
         }
       },
       err => {
         this.is_page_loading = false
         this.toastr.error('Oh Snap! Internal Server Error');
+        this.clicked = false
       }
     );
   }
@@ -211,11 +218,9 @@ export class AddEmployeeComponent implements OnInit {
   }
   
   toggleClicked(user) {
+    if(confirm("Are you sure to change activity status of employee?")){
+    this.toggleDisable = true
     this.selected_user = user
-    this.activeModal.show();
-  }
-
-  changeActivation() {
     this.is_page_loading = true
     let data
     if (this.selected_user.is_active) {
@@ -234,46 +239,31 @@ export class AddEmployeeComponent implements OnInit {
         this.is_page_loading = false
         if (res['success']) {
           this.toastr.success('Successfully changed!');
+          this.toggleDisable = false
+          this.clicked = false
           this.activeModal.hide();
           this.currentPageLoad()
         } else {
           this.toastr.error('Oh Snap! Can not update activation at this moment please try again later');
+          this.clicked = false
         }
       },
       err => {
         this.is_page_loading = false
         this.toastr.error('Oh Snap! Internal Server Error');
+        this.clicked = false
       }
-    );
+    ); 
+    }
   }
-  // deleteCategoryList(){
-  //   this.is_page_loading = true
-  //     this.employeeService.(this.selected_category.id).then((res) => {
-  //       if (res['success']) {
-  //         this.toastr.success('Successfully Deleted!');
-  //         this.deleteServiceModal.hide();
-  //         this.currentPageLoad() 
-  //       } else {
-  //         this.toastr.error('Oh Snap! Can not delete item at this moment please try again later');
-  //       }
-  //     },
-  //       err => {
-  //         this.toastr.error('Error!');
-  //         console.log(err);
-  //       });
-  // }
 
-  // deleteValues(event) {
-  //   this.selected_use = event
-  //   this.deleteServiceModal.show();
-  // }
+  changeActivation() {
+    
+  }
 
   cancel() {
     this.activeModal.hide();
     this.currentPageLoad()
   }
-  
-
-
 
 }

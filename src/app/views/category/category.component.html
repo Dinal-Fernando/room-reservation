@@ -28,15 +28,15 @@
                 <td>
                   <label class="switch switch-label switch-primary">
                     <input type="checkbox" class="switch-input" [checked]="category.is_active"
-                      (click)="toggleClicked(category)">
-                    <span class="switch-slider" data-checked="On" data-unchecked="OFF"></span>
+                      (click)="toggleClicked(category)" [disabled]="checked" >
+                    <span class="switch-slider" data-checked="YES" data-unchecked="NO"></span>
                   </label>
                 </td>
                 <td>
-                  <button type="button" (click)="updateValues(category)" data-target="#editServiceModal" class="btn btn-primary-new">Update</button>
+                  <button type="button" (click)="updateValues(category)" data-target="#editServiceModal"   class="btn btn-sm btn-primary">Update</button>
                 </td>
                 <td>
-                  <button type="button" (click)="deleteValues(category)" data-target="#deleteServiceModal" class="btn btn-primary-new">Delete</button>
+                  <button type="button" (click)="deleteValues(category)" data-target="#deleteServiceModal" class="btn btn-sm  btn-danger">Delete</button>
                 </td>
             </tr>
             <tr *ngIf="categoryList.length < 1 && !is_loading">
@@ -76,7 +76,7 @@
     <div class="modal-dialog modal-primary" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title">Add Bookings</h4>       
+          <h4 class="modal-title">Add Room Category</h4>       
           <button type="button" class="close" (click)="primaryModal.hide()" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -86,11 +86,11 @@
                     <!--Form starts here-->
                   <div class="card">
                     <div class="card-header">
-                      <strong>Booking</strong> Form
+                      <strong>Room Category</strong> Form
                     </div>
                       <!--FORM-->
                     <div class="card-body">
-                    <form #categoryForm="ngForm" (ngSubmit)="onSubmit(categoryForm)" enctype="multipart/form-data" class="form-horizontal" >
+                    <form #categoryForm="ngForm" (ngSubmit)="onSubmit(categoryForm); clicked = true;" enctype="multipart/form-data" class="form-horizontal" >
                     <div class="form-group row">
                       <label class="col-md-3 col-form-label" for="categoryName">Category Name</label>
                         <div class="col-md-9">
@@ -112,23 +112,23 @@
                             </div>
                         </div>
                     </div>
-                    <button [disabled]= "categoryForm.form.invalid" type="submit" data-dismiss="modal" class="btn btn-sm btn-primary"><i class="fa fa-dot-circle-o"></i> Submit</button>
+                    <button [disabled]= "categoryForm.form.invalid" [disabled]="clicked" type="submit" data-dismiss="modal" class="btn btn-sm btn-primary"><i class="fa fa-dot-circle-o"></i> Submit</button>
                     <button type="reset" class="btn btn-sm btn-danger"><i class="fa fa-ban" (click)="resetCategoryForm(categoryForm)"></i> Reset</button>
-              </form>
-        </div>
-        </div>
-      </div>
-     </div>
-   </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+                </form>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
 
 <!--Is_active update Category popup-->
 <div bsModal #activeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
 aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form>
+      <form >
         <div class="modal-header">
           <h4 class="modal-title">Change Activation</h4>
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
@@ -139,7 +139,7 @@ aria-hidden="true">
         </div>
         <div class="modal-footer">
           <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" (click)="cancel()">
-          <input type="submit" class="btn btn-info" value="Save" (click)="changeActivation()">
+          <input type="submit" class="btn btn-sm btn-primary" value="Save"  [disabled]="clicked" (click)="changeActivation(); clicked=true;">
         </div>
       </form>
     </div>
@@ -163,9 +163,8 @@ aria-hidden="true">
           </div>
         </div>
         <div class="modal-footer">
-          <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel"
-            (click)="deleteServiceModal.hide()">
-          <input type="submit" class="btn btn-info" value="Yes" (click)="deleteCategoryList()">
+          <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" (click)="deleteServiceModal.hide()">
+          <input type="submit" class="btn btn-primary" value="Yes" [disabled]="clicked" (click)="deleteCategoryList(); clicked=true;">
         </div>
       </form>
     </div>
@@ -177,7 +176,7 @@ aria-hidden="true">
   aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form>
+      <form #categoryUpdateForm="ngForm" (ngSubmit)="updateCategoryList();clicked=true;"  enctype="multipart/form-data" class="form-horizontal">
         <div class="modal-header">
           <h4 class="modal-title">Edit Category Details</h4>
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
@@ -186,34 +185,16 @@ aria-hidden="true">
         <div class="modal-body">
           <div class="form-group">
             <label>Category Name</label>
-            <input type="text" class="form-control" [(ngModel)]="selected_category_name"
-              [ngModelOptions]="{standalone: true}" name="category_name" required>
+            <input type="text" class="form-control" #category_name="ngModel" [(ngModel)]="selected_category_name"
+              [ngModelOptions]="{standalone: true}" name="category_name" placeholder="Enter a category name.." required ngModel>
+              <small class="text-danger" [class.d-none]="category_name.valid || category_name.untouched">Category name is required</small>
           </div>
-
         </div>
         <div class="modal-footer">
-          <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel"
-            (click)="editServiceModal.hide()">
-          <input type="submit" class="btn btn-info" value="Save" (click)="updateCategoryList()">
+          <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" (click)="editServiceModal.hide()">
+          <input [disabled]="categoryUpdateForm.form.invalid" [disabled]="clicked" type="submit" class="btn btn-primary" value="Save" >
         </div>
       </form>
     </div>
   </div>
 </div>
-<!-- 
-<div class="col-6 animation-div2" *ngIf="is_page_loading">
-  <div class="lds-spinner">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-  </div>
-</div> -->

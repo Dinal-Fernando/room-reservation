@@ -48,8 +48,10 @@ export class AddSpacceComponent implements OnInit {
   selected_room_price: any;
   selected_room_category: any;
   route_category_id=""
+  clicked=false
   category_id: any;
   categoriesList: any[]=[];
+  toggleDisable: boolean;
 
   constructor(
     private router: Router,
@@ -187,31 +189,39 @@ export class AddSpacceComponent implements OnInit {
         this.is_page_loading = false
         if (res['success']) {
           this.toastr.success('Successfully Updated!');
+          this.clicked = false
           this.editServiceModal.hide();
           this.currentPageLoad();
         } else {
           this.toastr.error('Oh Snap! Can not update item at this moment please try again later');
+          this.clicked = false
         }
       },
       err => {
         this.is_page_loading = false
         this.toastr.error('Oh Snap! Internal Server Error');
+        this.clicked = false
       }
     );
   }
   
   deleteRoomList(){
-    this.is_page_loading = true
+      this.is_loading = true
       this.roomService.deleteRooms(this.selected_room.id).then((res) => {
         if (res['success']) {
+          this.is_loading = false
           this.toastr.success('Successfully Deleted!');
           this.deleteServiceModal.hide();
-          this.currentPageLoad() 
+          this.currentPageLoad();
+          this.clicked = false
         } else {
+          this.is_loading = false
           this.toastr.error('Oh Snap! Can not delete item at this moment please try again later');
+          this.clicked = false
         }
       },
         err => {
+          this.is_loading = false
           this.toastr.error('Error!');
           console.log(err);
         });
@@ -232,12 +242,10 @@ export class AddSpacceComponent implements OnInit {
   }
 
   toggleClicked(room) {
+    if(confirm("Do you want to change the activity status?")){
+    this.toggleDisable = true
+    this.is_loading = true
     this.selected_room = room
-    this.activeModal.show();
-  }
-
-  changeActivation() {
-    this.is_page_loading = true
     let data
     if (this.selected_room.is_active) {
       data = {
@@ -250,20 +258,26 @@ export class AddSpacceComponent implements OnInit {
     }
     this.roomService.changeRoomActivation(this.selected_room.id, JSON.stringify(data)).then(
       res => {
-        this.is_page_loading = false
+        this.is_loading = false
         if (res['success']) {
           this.toastr.success('Successfully changed!');
-          this.activeModal.hide();
-          this.currentPageLoad()
+          this.toggleDisable = false
+          this.currentPageLoad();
         } else {
+          this.is_loading = false
           this.toastr.error('Oh Snap! Can not update activation at this moment please try again later');
         }
       },
       err => {
-        this.is_page_loading = false
+        this.is_loading = false
         this.toastr.error('Oh Snap! Internal Server Error');
       }
     );
+    }
+  }
+
+  changeActivation() {
+    
   }
 
 }

@@ -35,7 +35,7 @@ declare var $:any;
 })
 export class DayComponent implements OnInit {
     @ViewChild('calendar') calendarComponent: FullCalendarComponent; // the #calendar in the template
-    @ViewChild('primaryModal') public primaryModal: ModalDirective;
+    @ViewChild('largeModal') public largeModal: ModalDirective;
     @ViewChild('detailModal') public detailModal: ModalDirective;
     @ViewChild('activeModal') public activeModal: ModalDirective;
     @ViewChild('external') external: ElementRef;
@@ -342,12 +342,10 @@ export class DayComponent implements OnInit {
 
       getCheckOutTIme(index){
         var todaysDatee = new Number(new Date());
-        var roomid = this.getContactsFormGroup(index).controls['room'].value
-        var checkin =   this.getContactsFormGroup(index).controls['checkin'].value
-        var checkout =  this.getContactsFormGroup(index).controls['checkout'].value   
-        this.check_in = checkin;
-        console.log(todaysDatee)  
-        console.log((Date.parse(checkout)))     
+        var roomid   = this.getContactsFormGroup(index).controls['room'].value
+        var checkin  = this.getContactsFormGroup(index).controls['checkin'].value
+        var checkout = this.getContactsFormGroup(index).controls['checkout'].value   
+        this.check_in = checkin;     
         if(Date.parse(checkout) < todaysDatee) {
           this.toastr.error('Oops! Make sure date is not a past date');  
           this.getContactsFormGroup(index).controls['checkout'].reset()
@@ -502,7 +500,7 @@ export class DayComponent implements OnInit {
           if (res['success']) {
             this.is_loading = false 
             this.detailsForm.reset();  
-            this.primaryModal.hide();
+            this.largeModal.hide();
             this.toastr.success('Successfully Added!');    
             this.currentPageLoad();
           } else {
@@ -631,7 +629,7 @@ export class DayComponent implements OnInit {
   }
   close(){
     this.detailsForm.reset()
-    this.primaryModal.hide()
+    this.largeModal.hide()
   }
 
   cancelEve(info){

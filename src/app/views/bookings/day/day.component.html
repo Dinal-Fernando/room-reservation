@@ -8,7 +8,7 @@
         <div class="card-header">
           <i class="icon-calendar"></i> Calendar
           <div class="float-right">
-            <button type="button" class="round-button round-button-circle" data-toggle="modal" (click)="primaryModal.show()"> + </button>
+            <button type="button" class="round-button round-button-circle" data-toggle="modal" (click)="largeModal.show()"> + </button>
           </div>
         </div>
         <div class="card-body">
@@ -180,8 +180,8 @@
             </div>
             <!--end model-->
 
-            <div bsModal #primaryModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-              <div class="modal-dialog modal-primary" role="document">
+            <div bsModal #largeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
                     <h4 class="modal-title">Add Bookings</h4>       
@@ -191,13 +191,81 @@
                   </div>
                   <div class="modal-body">
                     <!--Form starts here-->
-                    <div class="card">
-                      <div class="card-header">
-                        <strong>Booking</strong> Form
-                      </div>
                       <form (ngSubmit)="processForm()" [formGroup]="detailsForm" >
                           <!-- Nav tabs -->
                           <tabset>
+                            <tab>
+                              <ng-template tabHeading>Room reservation info</ng-template>
+                              <!--Reservation Details-->   
+                              <div formArrayName="details">
+                                <div *ngFor="let detail of details().controls; let empIndex=index">
+                                  <div [formGroupName]="empIndex" >
+                                    <div class="card">   
+                                      <button type="button" title="Remove"class="btn btn-sm btn-primary" (click)="removeDetail(empIndex)" >Remove Room</button>
+                                      <br>
+                                        <div class="col-7">                                                        
+                                              <label for="nf-room">Room Number</label>
+                                              <select required  formControlName="room" name="room" (ngModelChange)="selected($event,empIndex)" class="form-control" required>
+                                                <option value="">Please select</option>
+                                                <option *ngFor="let roomy of roomList"  [value]="roomy.id"  >{{roomy.room_number}} ~ Rs.{{roomy.price}}</option>
+                                              </select>
+                                              <span class="text-danger" *ngIf="getContactsFormGroup(empIndex).controls['room'].touched && getContactsFormGroup(empIndex).controls['room'].hasError('required')">
+                                                Room  is required! </span>
+                                        </div>
+                                        <div class="col-7">
+                                              <label >Price</label>
+                                              <input type="number"  formControlName="price" (change)='getRoomID()' name="price" class="form-control"  placeholder="Enter a new price.." required>
+                                              <span class="text-danger" *ngIf="getContactsFormGroup(empIndex).controls['price'].touched && getContactsFormGroup(empIndex).controls['price'].hasError('required')">
+                                                Price  is required! </span>
+                                        </div>
+                                        <div class="col-7">
+                                              <label>Check-in time</label>
+                                              <input type="datetime-local" formControlName="checkin"  (change)='getCheckInTIme(empIndex)' name="checkin" class="form-control" placeholder="Enter check in time.."  required >
+                                              <span class="text-danger" *ngIf="getContactsFormGroup(empIndex).controls['checkin'].touched && getContactsFormGroup(empIndex).controls['checkin'].hasError('required')">
+                                                Check in  is required! </span>
+                                          </div>
+                                          <div class="col-7">
+                                              <label >Check-out time</label>
+                                              <input type="datetime-local" formControlName="checkout"  (change)='getCheckOutTIme(empIndex)'   name="checkout" class="form-control"   required >   
+                                              <span class="text-danger" *ngIf="getContactsFormGroup(empIndex).controls['checkout'].touched && getContactsFormGroup(empIndex).controls['checkout'].hasError('required')">
+                                                Check out  is required! </span>
+                                          </div>
+                                          <div>
+                                            <div class="padding">
+                                            <full-calendar
+                                              #calendar
+                                              defaultView="dayGridMonth"
+                                              [header]="{
+                                                left: 'prev,next today',
+                                                center: 'title',
+                                                right: 'dayGridMonth,resourceTimelineDay,resourceTimelineWeek,listWeek'
+                                              }"
+                                              [plugins]     ="calendarPlugins"
+                                              [weekends]    ="calendarWeekends"
+                                              [events]      ="calendarEvents"
+                                              (dateClick)   ="handleDateClick($event)"
+                                              schedulerLicenseKey="GPL-My-Project-Is-Open-Source"
+                                              [resourceColumns]  ="resourcecolumns"
+                                              [resources]   ="resourcelist"
+                                              selectable    ="true"
+                                              selectHelper  ="true"
+                                              navLinks      ="true"
+                                              editable      ="true"
+                                              (clickButton) ="clickButton($event.detail)"
+                                              (eventClick)  ="eventClick($event)" 
+                                              (clickButton) ="clickButton($event.detail)"
+                                              navLinks      ="true"
+                                            ></full-calendar>
+                                              </div>
+                                          </div>
+                                    </div><!--Card div--> 
+                                </div>                        
+                                </div>
+                                
+                              </div><!--Div formArrayName="details"-->
+                              <label>If you need to add extra rooms please press the button below <strong>:</strong></label>
+                              <button type="button" title="Add"class="btn btn-sm btn-primary" (click)="addDetail()">Add More Rooms</button>
+                            </tab>
                             <tab>   
                               <ng-template tabHeading>Client Information</ng-template>                        
                               <div class="form-group row">
@@ -250,49 +318,6 @@
                                 </div>
                               </div>                                       
                             </tab>
-                            <tab>
-                              <ng-template tabHeading>Room reservation info</ng-template>
-                              <!--Reservation Details-->   
-                              <div formArrayName="details">
-                                <div *ngFor="let detail of details().controls; let empIndex=index">
-                                  <div [formGroupName]="empIndex" >
-                                    <div class="card">   
-                                      <button type="button" title="Remove"class="btn btn-sm btn-primary" (click)="removeDetail(empIndex)" >Remove Room</button>
-                                      <br>
-                                        <div class="col-7">                                                        
-                                              <label for="nf-room">Room Number</label>
-                                              <select required  formControlName="room" name="room" (ngModelChange)="selected($event,empIndex)" class="form-control" required>
-                                                <option value="">Please select</option>
-                                                <option *ngFor="let roomy of roomList"  [value]="roomy.id"  >{{roomy.room_number}} ~ Rs.{{roomy.price}}</option>
-                                              </select>
-                                              <span class="text-danger" *ngIf="getContactsFormGroup(empIndex).controls['room'].touched && getContactsFormGroup(empIndex).controls['room'].hasError('required')">
-                                                Room  is required! </span>
-                                        </div>
-                                        <div class="col-7">
-                                              <label >Price</label>
-                                              <input type="number"  formControlName="price" (change)='getRoomID()' name="price" class="form-control"  placeholder="Enter a new price.." required>
-                                              <span class="text-danger" *ngIf="getContactsFormGroup(empIndex).controls['price'].touched && getContactsFormGroup(empIndex).controls['price'].hasError('required')">
-                                                Price  is required! </span>
-                                        </div>
-                                        <div class="col-7">
-                                              <label>Check-in time</label>
-                                              <input type="datetime-local" formControlName="checkin"  (change)='getCheckInTIme(empIndex)' name="checkin" class="form-control" placeholder="Enter check in time.."  required >
-                                              <span class="text-danger" *ngIf="getContactsFormGroup(empIndex).controls['checkin'].touched && getContactsFormGroup(empIndex).controls['checkin'].hasError('required')">
-                                                Check in  is required! </span>
-                                          </div>
-                                          <div class="col-7">
-                                              <label >Check-out time</label>
-                                              <input type="datetime-local" formControlName="checkout"  (change)='getCheckOutTIme(empIndex)'   name="checkout" class="form-control"   required >   
-                                              <span class="text-danger" *ngIf="getContactsFormGroup(empIndex).controls['checkout'].touched && getContactsFormGroup(empIndex).controls['checkout'].hasError('required')">
-                                                Check out  is required! </span>
-                                          </div>  
-                                    </div><!--Card div--> 
-                                </div>                        
-                                </div>
-                              </div><!--Div formArrayName="details"-->
-                              <label>If you need to add extra rooms please press the button below <strong>:</strong></label>
-                              <button type="button" title="Add"class="btn btn-sm btn-primary" (click)="addDetail()">Add More Rooms</button>
-                            </tab>
                              <tab  (selectTab)="getTotal()">
                               <ng-template tabHeading>Total</ng-template>
                               <!-- <div class="col-7">
@@ -329,7 +354,6 @@
                               </div>  
                           </tabset>
                         </form>
-                        </div>
                     <!--Form ends here-->
                   </div>             
                 </div><!-- /.modal-content -->

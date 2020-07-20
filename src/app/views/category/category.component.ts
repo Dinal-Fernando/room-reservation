@@ -40,8 +40,10 @@ export class CategoryComponent implements OnInit {
   selected_category_name: any;
 
   categoryForm: NgForm;
-
+  categoryUpdateForm:NgForm;
   is_active ="true";
+  clicked = false;
+  checked: boolean;
   constructor (
     private router: Router,
     public http: Http,
@@ -107,28 +109,29 @@ export class CategoryComponent implements OnInit {
         res => {
           this.is_page_loading = false
           if (res['success']) {
-            this.toastr.success('Successfully Added!');
             form.resetForm();
-            this.primaryModal.hide();
             this.currentPageLoad();
+            this.primaryModal.hide();
+            this.toastr.success('Successfully Added!');
+            this.clicked = false
           } else {
             this.toastr.error('Oops! Can not add category at this moment please try again later');
+            this.clicked = false
           }
         },
         err => {
           this.is_page_loading = false
           this.toastr.error('Oops! Internal Server Error');
+          this.clicked = false
         }
       );
 
     }
 
     toggleClicked(category) {
+      if(confirm("Do you want to change the activity status?")){
       this.selected_category = category
-      this.activeModal.show();
-    }
-
-    changeActivation() {
+      this.checked = true
       this.is_page_loading = true
       let data
       if (this.selected_category.is_active) {
@@ -144,18 +147,28 @@ export class CategoryComponent implements OnInit {
         res => {
           this.is_page_loading = false
           if (res['success']) {
-            this.toastr.success('Successfully changed!');
             this.activeModal.hide();
-            this.currentPageLoad()
+            this.currentPageLoad();
+            this.toastr.success('Successfully changed!');
+            this.clicked = false
+            this.checked = false
           } else {
             this.toastr.error('Oh Snap! Can not update activation at this moment please try again later');
+            this.clicked = false
+            this.checked = false
           }
         },
         err => {
           this.is_page_loading = false
           this.toastr.error('Oh Snap! Internal Server Error');
+          this.clicked = false
+          this.checked = false
         }
-      );
+      );}
+    }
+
+    changeActivation() {
+      
     }
 
     updateCategoryList() {
@@ -167,16 +180,19 @@ export class CategoryComponent implements OnInit {
         res => {
           this.is_page_loading = false
           if (res['success']) {
+            this.currentPageLoad();
             this.toastr.success('Successfully Updated!');
             this.editServiceModal.hide();
-            this.currentPageLoad() 
+            this.clicked = false
           } else {
             this.toastr.error('Oh Snap! Can not update item at this moment please try again later');
+            this.clicked = false
           }
         },
         err => {
           this.is_page_loading = false
           this.toastr.error('Oh Snap! Internal Server Error');
+          this.clicked = false
         }
       );
     }
@@ -188,19 +204,23 @@ export class CategoryComponent implements OnInit {
     }
 
     deleteCategoryList(){
-      this.is_page_loading = true
+        this.is_page_loading = true
         this.categoryService.deleteCategory(this.selected_category.id).then((res) => {
           if (res['success']) {
-            this.toastr.success('Successfully Deleted!');
+            this.is_page_loading = false;
             this.deleteServiceModal.hide();
-            this.currentPageLoad() 
+            this.currentPageLoad();
+            this.toastr.success('Successfully Deleted!');
+            this.clicked = false
           } else {
             this.toastr.error('Oh Snap! Can not delete item at this moment please try again later');
+            this.clicked = false
           }
         },
           err => {
+            this.is_page_loading = false
             this.toastr.error('Error!');
-            console.log(err);
+            this.clicked = false
           });
     }
 

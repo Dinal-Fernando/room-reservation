@@ -11,7 +11,7 @@
      </div>
         </div>
         <div class="card-body">
-          <table class="table table-bordered table-striped">
+          <table class="table table-striped">
             <thead class="table-info">
               <tr>
                 <th>Room Number </th>
@@ -30,20 +30,20 @@
                 <td>
                   <label class="switch switch-label switch-primary">
                     <input type="checkbox" class="switch-input" [checked]="room.is_active"
-                      (click)="toggleClicked(room)">
+                      (click)="toggleClicked(room)" [disabled]="toggleDisable">
                     <span class="switch-slider" data-checked="On" data-unchecked="OFF"></span>
                   </label>
                 </td>
                 <td>{{room.category}}</td>
                 <td>
-                  <button type="button" (click)="updateValues(room)" data-target="#editServiceModal" class="btn btn-primary-new">Update</button>
+                  <button type="button" (click)="updateValues(room)" data-target="#editServiceModal" class="btn btn-sm btn-primary">Update</button>
                 </td>
                 <td>
-                  <button type="button" (click)="deleteValues(room)" data-target="#deleteServiceModal" class="btn btn-primary-new">Delete</button>
+                  <button type="button" (click)="deleteValues(room)" data-target="#deleteServiceModal" class="btn btn-sm btn-danger">Delete</button>
                 </td>
               </tr>
               <tr *ngIf="roomList.length < 1 && !is_loading">
-                <td colspan="6" class="text-center">There is No rooms upto now!</td>
+                <td colspan="6" class="text-center">There are No rooms upto now!</td>
               </tr>
               <tr *ngIf="is_loading">
                 <td colspan="6" class="text-center padding-top">
@@ -84,7 +84,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="modal-title">Add Rooms</h4>       
-          <button type="button" class="close" (click)="primaryModal.hide()" aria-label="Close">
+          <button type="button" class="close" (click)="addRoomModal.hide()" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -97,7 +97,7 @@
               </div>
               <!--FORM-->
               <div class="card-body">
-                <form #addRoomForm="ngForm" (ngSubmit)="onSubmit(addRoomForm)" method="post" enctype="multipart/form-data" class="form-horizontal">
+                <form #addRoomForm="ngForm" (ngSubmit)="onSubmit(addRoomForm); clicked=true;" method="post" enctype="multipart/form-data" class="form-horizontal" validate> 
                   <div class="form-group row">
                     <label class="col-md-3 col-form-label" for="text-input">Room number</label>
                       <div class="col-md-9">
@@ -137,7 +137,7 @@
                     </div>
                   </div>
               <div class="card-footer">
-                <button type="submit" [disabled]="addRoomForm.form.invalid" class="btn btn-sm btn-primary"><i class="fa fa-dot-circle-o"></i> Submit</button>
+                <button type="submit" [disabled]="addRoomForm.form.invalid" [disabled]="clicked" class="btn btn-sm btn-primary"><i class="fa fa-dot-circle-o"></i> Submit</button>
                 <button type="reset" class="btn btn-sm btn-danger" (click)="resetForm(addRoomForm)"><i class="fa fa-ban"></i> Reset</button>
               </div>
             </form>
@@ -166,7 +166,7 @@
         </div>
         <div class="modal-footer">
           <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" (click)="cancel()">
-          <input type="submit" class="btn btn-info"  value="Save" (click)="changeActivation()">
+          <input type="submit" class="btn btn-primary"  value="Save" (click)="changeActivation();clicked=true;">
         </div>
       </form>
     </div>
@@ -213,7 +213,7 @@
         </div>
         <div class="modal-footer">
           <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" (click)="editServiceModal.hide()">
-          <input type="submit" class="btn btn-info" value="Save" [disabled]="editRoomForm.form.invalid" (click)="updateRoomList()">
+          <input type="submit" class="btn btn-primary" value="Save" [disabled]="editRoomForm.form.invalid" [disabled]="clicked" (click)="updateRoomList(); clicked=true;">
         </div>
       </form>
     </div>
@@ -238,7 +238,7 @@
         </div>
         <div class="modal-footer">
           <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" (click)="deleteServiceModal.hide()">
-          <input type="submit" class="btn btn-info" value="Yes" (click)="deleteRoomList()">
+          <input type="submit" class="btn btn-primary" value="Yes" [disabled]="clicked" (click)="deleteRoomList(); clicked=true;">
         </div>
       </form>
     </div>
