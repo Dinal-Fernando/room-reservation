@@ -12,6 +12,7 @@ import { __param } from 'tslib';
 import { data } from 'jquery';
 import { ToastrModule } from 'ngx-toastr';
 import { Room } from './room';
+import { ThemeService } from 'ng2-charts';
 
 @Component({
   selector: 'app-add-spacce',
@@ -52,6 +53,8 @@ export class AddSpacceComponent implements OnInit {
   category_id: any;
   categoriesList: any[]=[];
   toggleDisable: boolean;
+  selected_beds: any;
+  selected_max_persons: any;
 
   constructor(
     private router: Router,
@@ -121,11 +124,21 @@ export class AddSpacceComponent implements OnInit {
     var price = form.controls['roomPrice'].value;
     var is_active= form.controls['activity'].value == "true" ? 1 : 0;
     var category_id = form.controls['category'].value;
+    var ac = form.controls['ac'].value == true ? 1 : 0;
+    var attached_bathroom = form.controls['attached_bathroom'].value == true ? 1 : 0;
+    var smoking = form.controls['smoking'].value == true ? 1 : 0;
+    var beds = form.controls['bed'].value;
+    var max_persons = form.controls['max_persons'].value;
     let model = {
       room_number : room_number,
       price       : price,
       is_active   : is_active,
-      category    : category_id
+      category    : category_id,
+      ac          :ac,
+      attached_bathroom:attached_bathroom,
+      smoking:smoking,
+      beds:beds,
+      max_persons:max_persons
     }
     console.log("model"+model);
     this.roomService.addRooms(model).then(
@@ -170,6 +183,8 @@ export class AddSpacceComponent implements OnInit {
     this.selected_room_number  = event.room_number;
     this.selected_room_price   = event.price;
     this.category_id           = event.category_id;
+    this.selected_beds         = event.beds;
+    this.selected_max_persons  = event.max_persons
     console.log("id"+ event.category_id);
     this.selected_room = event
     this.editServiceModal.show();
@@ -180,7 +195,9 @@ export class AddSpacceComponent implements OnInit {
     let model = {
       "room_number" : this.selected_room_number,
       "price"       : this.selected_room_price,
-      "category_id" : this.category_id
+      "category_id" : this.category_id,
+      "beds"        : this.selected_beds,
+      "max_persons" : this.selected_max_persons
     }
     
    console.log("WEWEWEWE"+ this.category_id);
@@ -207,11 +224,11 @@ export class AddSpacceComponent implements OnInit {
   
   deleteRoomList(){
       this.is_loading = true
+      this.deleteServiceModal.hide();
       this.roomService.deleteRooms(this.selected_room.id).then((res) => {
         if (res['success']) {
           this.is_loading = false
           this.toastr.success('Successfully Deleted!');
-          this.deleteServiceModal.hide();
           this.currentPageLoad();
           this.clicked = false
         } else {
@@ -240,9 +257,8 @@ export class AddSpacceComponent implements OnInit {
   resetForm(form: NgForm){
     form.resetForm();
   }
-
+  //activity change
   toggleClicked(room) {
-    if(confirm("Do you want to change the activity status?")){
     this.toggleDisable = true
     this.is_loading = true
     this.selected_room = room
@@ -273,9 +289,107 @@ export class AddSpacceComponent implements OnInit {
         this.toastr.error('Oh Snap! Internal Server Error');
       }
     );
-    }
   }
-
+  //AC activity
+  toggleACClicked(room) {
+    this.toggleDisable = true
+    this.is_loading = true
+    this.selected_room = room
+    let data
+    if (this.selected_room.ac) {
+      data = {
+        ac: 0
+      }
+    } else {
+      data = {
+        ac: 1
+      }
+    }
+    this.roomService.changeRoomActivation(this.selected_room.id, JSON.stringify(data)).then(
+      res => {
+        this.is_loading = false
+        if (res['success']) {
+          this.toastr.success('Successfully changed!');
+          this.toggleDisable = false
+          this.currentPageLoad();
+        } else {
+          this.is_loading = false
+          this.toastr.error('Oh Snap! Can not update facility AC at this moment please try again later');
+        }
+      },
+      err => {
+        this.is_loading = false
+        this.toastr.error('Oh Snap! Internal Server Error');
+      }
+    );
+  }
+  //attached change
+  toggleAttachedClicked(room) {
+    this.toggleDisable = true
+    this.is_loading = true
+    this.selected_room = room
+    let data
+    if (this.selected_room.attached_bathroom) {
+      data = {
+        attached_bathroom: 0
+      }
+    } else {
+      data = {
+        attached_bathroom: 1
+      }
+    }
+    this.roomService.changeRoomActivation(this.selected_room.id, JSON.stringify(data)).then(
+      res => {
+        this.is_loading = false
+        if (res['success']) {
+          this.toastr.success('Successfully changed!');
+          this.toggleDisable = false
+          this.currentPageLoad();
+        } else {
+          this.is_loading = false
+          this.toastr.error('Oh Snap! Can not update at this moment please try again later');
+        }
+      },
+      err => {
+        this.is_loading = false
+        this.toastr.error('Oh Snap! Internal Server Error');
+      }
+    );
+  }
+  //smoking faciliy
+  toggleSmokingClicked(room) {
+    this.toggleDisable = true
+    this.is_loading = true
+    this.selected_room = room
+    let data
+    if (this.selected_room.smoking) {
+      data = {
+        smoking: 0
+      }
+    } else {
+      data = {
+        smoking: 1
+      }
+    }
+    this.roomService.changeRoomActivation(this.selected_room.id, JSON.stringify(data)).then(
+      res => {
+        this.is_loading = false
+        if (res['success']) {
+          this.toastr.success('Successfully changed!');
+          this.toggleDisable = false
+          this.currentPageLoad();
+        } else {
+          this.is_loading = false
+          this.toastr.error('Oh Snap! Can not update at this moment please try again later');
+        }
+      },
+      err => {
+        this.is_loading = false
+        this.toastr.error('Oh Snap! Internal Server Error');
+      }
+    );
+  }
+  
   changeActivation() {
     
   }

@@ -39,4 +39,8 @@ export class BookingsService {
       return this.commonService.postData('reservation/cancel/',model);
     }
 
+    getRoomEventsById(id){
+      return this.commonService.getData('reservation/getbyroom/?room_id='+id);
+    }
+
 }

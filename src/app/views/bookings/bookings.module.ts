@@ -20,6 +20,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 import {MatTabsModule} from '@angular/material'
 import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
+
+//callap
+import { CollapseModule } from 'ngx-bootstrap/collapse';
+
 @NgModule({
   declarations: [
     DayComponent,
@@ -29,6 +33,7 @@ import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
     CommonModule,
     TabsModule,
     BookingRoutingModule,
+    CollapseModule,
     FullCalendarModule,
     FormsModule, // for FullCalendar!
     ReactiveFormsModule,

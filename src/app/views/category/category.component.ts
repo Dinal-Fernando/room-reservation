@@ -129,7 +129,7 @@ export class CategoryComponent implements OnInit {
     }
 
     toggleClicked(category) {
-      if(confirm("Do you want to change the activity status?")){
+
       this.selected_category = category
       this.checked = true
       this.is_page_loading = true
@@ -164,11 +164,7 @@ export class CategoryComponent implements OnInit {
           this.clicked = false
           this.checked = false
         }
-      );}
-    }
-
-    changeActivation() {
-      
+      );
     }
 
     updateCategoryList() {

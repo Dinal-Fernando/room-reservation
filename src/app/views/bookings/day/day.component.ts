@@ -55,9 +55,11 @@ export class DayComponent implements OnInit {
       resourcelist = [];
 
       calendarEvents: EventInput[] = [];
-
+      roomCalendarEvents: EventInput[]=[]
+      
       rooms: any[];
       roomList :any[]=[];
+      roomEventList: any[];
 
       inputelements = [{id: 'number',roomNumber: 'string',checkin:'string',checkout:'string', price:'string'}];
 
@@ -109,6 +111,10 @@ export class DayComponent implements OnInit {
       DetailsList: any[]=[];
       EventDetail: any[]=[];
 
+      formloader =false;
+      clicked: boolean;
+      isCollapsed: boolean[];
+
       selected_room_number: any;
       selected_reservation_date: any;
       selected_reservaton_time: any;
@@ -135,8 +141,9 @@ export class DayComponent implements OnInit {
       selectedOption: any;
       show: boolean;
       selected_add_reason: any;
-  checkoutDisabled: any;
-
+      checkoutDisabled: any;
+      showEvents: boolean;
+    
       constructor(
         private roomService:RoomsService,
         private router: Router,
@@ -157,12 +164,11 @@ export class DayComponent implements OnInit {
         });
       }
 
-
       ngOnInit(){
         this.innerWidth = window.innerWidth;
         this.getRoomsList();
         this.getEventList(); 
-        console.log(this.roomy)
+        console.log(this.roomy);
       }
     
      details(): FormArray {
@@ -187,7 +193,6 @@ export class DayComponent implements OnInit {
         console.log("Adding a detail");
         this.details().push(this.newDetail());
       }
-     
      
       removeDetail(empIndex:number) {
         if(this.details().length !=1){
@@ -303,6 +308,8 @@ export class DayComponent implements OnInit {
         }
 
       getCheckInTIme(index){
+        this.showEvents = true
+        this.formloader = true 
         var todaysDatee = new Number(new Date());
         var roomid = this.getContactsFormGroup(index).controls['room'].value
         var checkin =   this.getContactsFormGroup(index).controls['checkin'].value
@@ -326,14 +333,18 @@ export class DayComponent implements OnInit {
               this.is_loading = false
               if (res['validity']) {
                 this.toastr.success('Room is available!');
+                this.showEvents  = !this.showEvents;
+                this.formloader = false
               } else {
                 this.toastr.error('Oops!There is a booking made at this time');
+                this.formloader = false
                 this.getContactsFormGroup(index).controls['checkin'].reset()
                 this.getContactsFormGroup(index).controls['checkout'].reset()
               }
             },
             err => {
               this.is_loading = false
+              this.formloader = false
               this.toastr.error('Oops! Internal Server Error');
             }
           );
@@ -341,6 +352,8 @@ export class DayComponent implements OnInit {
        }
 
       getCheckOutTIme(index){
+        this.showEvents = true 
+        this.formloader = true
         var todaysDatee = new Number(new Date());
         var roomid   = this.getContactsFormGroup(index).controls['room'].value
         var checkin  = this.getContactsFormGroup(index).controls['checkin'].value
@@ -368,20 +381,23 @@ export class DayComponent implements OnInit {
                 this.is_loading = false
                 if (res['validity']) {
                   this.toastr.success('Room is available!');
+                  this.showEvents = !this.showEvents
+                  this.formloader = false
                 } else {
                   this.toastr.error('Oops!There is a booking made at this time');
+                  this.formloader = false
                   this.getContactsFormGroup(index).controls['checkin'].reset()
                   this.getContactsFormGroup(index).controls['checkout'].reset() 
                 }
               },
               err => {
                 this.is_loading = false
+                this.formloader = false
                 this.toastr.error('Oops! Internal Server Error');
               }
           );
         }
-      }
-        
+      }       
       }
 
       getRoomID(index){
@@ -397,18 +413,17 @@ export class DayComponent implements OnInit {
       }
       
       selected(event,id){
+        this.formloader = true
+        console.log("event" + event)
         for (let i=0; i< this.roomList.length;i++){
           if(this.roomList[i].id == event){
               this.details().controls[id].get('price').setValue(this.roomList[i].price)
             }
-        } 
+        }
         var roomid = this.getContactsFormGroup(id).controls['room'].value
         var checkin =   this.getContactsFormGroup(id).controls['checkin'].value
         var checkout =  this.getContactsFormGroup(id).controls['checkout'].value   
-        this.check_in = checkin;      
-        if(checkin == ""  ){
-          console.log("trie")
-        } 
+        this.check_in = checkin;
          if(!(roomid == "" ||roomid == null ) && !(checkin == ""||checkin == null) && !(checkout == ""||checkout == null)){
           let model = {
             room    : roomid,
@@ -420,6 +435,8 @@ export class DayComponent implements OnInit {
               this.is_loading = false
               if (res['validity']) {
                 this.toastr.success('Room is available!');
+                this.showEvents = !this.showEvents;
+                this.getContactsFormGroup(id).disable()
               } else {
                 this.toastr.error('Oops!There is a booking made at this time');
                 this.getContactsFormGroup(id).controls['checkin'].reset()
@@ -431,7 +448,28 @@ export class DayComponent implements OnInit {
               this.toastr.error('Oops! Internal Server Error');
             }
           );
-        }      
+        }
+        
+        this.bookingService.getRoomEventsById(event).then(
+          res => {
+            if (res['success']) {
+              this.is_loading = false;
+              this.roomEventList = res['data']; 
+              this.showEvents = true 
+              this.clicked = true
+              this.roomCalendarEvents[id] = this.roomEventList;
+              this.formloader = false
+            } else {
+              this.is_loading= false
+              this.toastr.error('Oops! Room bookings are not found please try again later');
+            }
+          },
+          err => {
+            this.is_loading = false
+            this.toastr.error('Oops! Internal Server Error');
+          }
+        );
+        
       }
 
     public addInputElement(): void{
@@ -628,8 +666,7 @@ export class DayComponent implements OnInit {
     // );
   }
   close(){
-    this.detailsForm.reset()
-    this.largeModal.hide()
+    this.largeModal.hide();
   }
 
   cancelEve(info){
@@ -638,6 +675,9 @@ export class DayComponent implements OnInit {
   showCancelMde(){
     this.detailModal.hide();
     this.activeModal.show();
+  }
+  collaps(empIndex:number){
+    this.isCollapsed[empIndex] = !this.isCollapsed[empIndex]
   }
 
 }

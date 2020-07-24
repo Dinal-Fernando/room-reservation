@@ -61,11 +61,12 @@ export const navItems: INavData[] = [
     url: '/reports/reports',
     icon: 'icon-folder-alt'
   },
-  // {
-  //   name: 'Settings',
-  //   url: '/settings/settings',
-  //   icon: 'icon-settings'
-  // },
+  {
+    name: 'Settings',
+    url: '/settings/settings',
+    icon: 'icon-settings'
+  }
+  // ,
   //   {
   //   name: 'Base',
   //   url: '/base',

@@ -98,9 +98,7 @@
                              <input type="text" class="form-control" #mobile_number="ngModel" [(ngModel)]="selected_mobile"
                                [ngModelOptions]="{standalone: true}" name="mobile_number" placeholder="" [disabled]="true" ngModel/>                    
                              </div>
-                          </div>        
-                         
-                        
+                          </div>              
                           <div *ngFor="let detail of DetailsBookingList" >    
                           <strong>Room Detail</strong>
                             <div class="form-group row">
@@ -196,18 +194,19 @@
                           <tabset>
                             <tab>
                               <ng-template tabHeading>Room reservation info</ng-template>
-                              <!--Reservation Details-->   
+                              <!--Reservation Details-->                 
                               <div formArrayName="details">
                                 <div *ngFor="let detail of details().controls; let empIndex=index">
-                                  <div [formGroupName]="empIndex" >
-                                    <div class="card">   
+                                  <div [formGroupName]="empIndex">
+                                    <div [collapse]="isCollapsed">
+                                    <div class="card"> 
                                       <button type="button" title="Remove"class="btn btn-sm btn-primary" (click)="removeDetail(empIndex)" >Remove Room</button>
                                       <br>
                                         <div class="col-7">                                                        
                                               <label for="nf-room">Room Number</label>
                                               <select required  formControlName="room" name="room" (ngModelChange)="selected($event,empIndex)" class="form-control" required>
                                                 <option value="">Please select</option>
-                                                <option *ngFor="let roomy of roomList"  [value]="roomy.id"  >{{roomy.room_number}} ~ Rs.{{roomy.price}}</option>
+                                                <option *ngFor="let roomy of roomList"  [value]="roomy.id"  >{{roomy.room_number}} ~ Rs.{{roomy.price}} ~ {{roomy.category}}</option>
                                               </select>
                                               <span class="text-danger" *ngIf="getContactsFormGroup(empIndex).controls['room'].touched && getContactsFormGroup(empIndex).controls['room'].hasError('required')">
                                                 Room  is required! </span>
@@ -230,38 +229,68 @@
                                               <span class="text-danger" *ngIf="getContactsFormGroup(empIndex).controls['checkout'].touched && getContactsFormGroup(empIndex).controls['checkout'].hasError('required')">
                                                 Check out  is required! </span>
                                           </div>
-                                          <div>
+                                          <div class="col-7">
+                                                <label for="nf-client-nic">Meals</label>
+                                                <select required  formControlName="channel" name="channel" class="form-control" required>
+                                                  <option value="">Please select Channel</option>
+                                                  <option *ngFor="let roomy of roomList"  [value]="roomy.id"  >{{roomy.room_number}} ~ Rs.{{roomy.price}} ~ {{roomy.category}}</option>
+                                                </select>
+                                                <!-- <span class="text-danger" *ngIf="getContactsFormGroup(empIndex).controls['room'].touched && getContactsFormGroup(empIndex).controls['room'].hasError('required')">
+                                                  Room  is required! </span> -->
+                                          </div> 
+                                          <div *ngIf="clicked">
+                                          <!-- <div  *ngIf="showEvents"> -->
                                             <div class="padding">
                                             <full-calendar
-                                              #calendar
-                                              defaultView="dayGridMonth"
-                                              [header]="{
-                                                left: 'prev,next today',
-                                                center: 'title',
-                                                right: 'dayGridMonth,resourceTimelineDay,resourceTimelineWeek,listWeek'
-                                              }"
-                                              [plugins]     ="calendarPlugins"
-                                              [weekends]    ="calendarWeekends"
-                                              [events]      ="calendarEvents"
-                                              (dateClick)   ="handleDateClick($event)"
-                                              schedulerLicenseKey="GPL-My-Project-Is-Open-Source"
-                                              [resourceColumns]  ="resourcecolumns"
-                                              [resources]   ="resourcelist"
-                                              selectable    ="true"
-                                              selectHelper  ="true"
-                                              navLinks      ="true"
-                                              editable      ="true"
-                                              (clickButton) ="clickButton($event.detail)"
-                                              (eventClick)  ="eventClick($event)" 
-                                              (clickButton) ="clickButton($event.detail)"
-                                              navLinks      ="true"
+                                                  formControlName="calendar" 
+                                                  name="calendar"
+                                                  defaultView="dayGridMonth"
+                                                  [header]="{
+                                                    left: 'prev,next today',
+                                                    center: 'title',
+                                                    right: 'dayGridMonth,resourceTimelineDay,resourceTimelineWeek,listWeek'
+                                                  }"
+                                                  [plugins]     ="calendarPlugins"
+                                                  [weekends]    ="calendarWeekends"
+                                                  [events]      ="roomCalendarEvents[empIndex]"
+                                                  schedulerLicenseKey="GPL-My-Project-Is-Open-Source"
+                                                  [resourceColumns]  ="resourcecolumns"
+                                                  [resources]   ="resourcelist"
+                                                  selectable    ="true"
+                                                  selectHelper  ="true"
+                                                  navLinks      ="true"
+                                                  editable      ="true"                                             
                                             ></full-calendar>
-                                              </div>
+                                              <!-- </div>           -->
                                           </div>
+                                        </div>                                  
+                                          <!--Loa-->
+                                          <div *ngIf="formloader">
+                                            <div colspan="6" class="text-center padding-top">
+                                              <div>
+                                                <div class="lds-spinner margin-top">
+                                                  <div></div>
+                                                  <div></div>
+                                                  <div></div>
+                                                  <div></div>
+                                                  <div></div>
+                                                  <div></div>
+                                                  <div></div>
+                                                  <div></div>
+                                                  <div></div>
+                                                  <div></div>
+                                                  <div></div>
+                                                  <div></div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div> 
                                     </div><!--Card div--> 
-                                </div>                        
+                                </div>   
+                                <!-- <button type="button" class="btn btn-primary"(click)="collaps(empIndex)">Toggle collapse
+                                 </button>              -->
+                                </div>        
                                 </div>
-                                
                               </div><!--Div formArrayName="details"-->
                               <label>If you need to add extra rooms please press the button below <strong>:</strong></label>
                               <button type="button" title="Add"class="btn btn-sm btn-primary" (click)="addDetail()">Add More Rooms</button>
@@ -309,6 +338,8 @@
                                     <!-- <span class="help-block">Please enter your email</span> -->
                                   </div>
                                 </div>
+                              </div>
+                              <div class="form-group row">
                                 <div class="col-6">
                                   <div class="form-group">
                                     <label for="nf-email">Email </label>
@@ -316,13 +347,39 @@
                                     <!-- <span class="help-block">Please enter your email</span> -->
                                   </div>
                                 </div>
-                              </div>                                       
+                              </div>     
+                              <div class="form-group row">
+                                <div class="col-6">
+                                  <div class="form-group">
+                                    <label for="nf-client-nic">Number of adults </label>
+                                    <input type="text" formControlName="adults"  name="adults" class="form-control" placeholder="Enter number of adults" required >
+                                    <!-- <span class="help-block">Please enter your email</span> -->
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <div class="col-6">
+                                  <div class="form-group">
+                                    <label for="nf-email"> Number of children </label>
+                                    <input type="text" formControlName="children"  name="children" class="form-control" placeholder="Enter number of children.." required >
+                                    <!-- <span class="help-block">Please enter your email</span> -->
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <div class="col-6">
+                                  <div class="form-group">
+                                    <label for="nf-client-nic">Channel</label>
+                                    <select required  formControlName="channel" name="channel" class="form-control" required>
+                                      <option value="">Please select Channel</option>
+                                      <option *ngFor="let roomy of roomList"  [value]="roomy.id"  >{{roomy.room_number}} ~ Rs.{{roomy.price}} ~ {{roomy.category}}</option>
+                                    </select>                           
+                                  </div>
+                                </div>
+                               </div>                    
                             </tab>
                              <tab  (selectTab)="getTotal()">
                               <ng-template tabHeading>Total</ng-template>
-                              <!-- <div class="col-7">
-                                <button type="button" (click)="getTotal()">Find Total!</button>
-                              </div> -->
                              <strong>Total: </strong>
                              <div class="form-group">
                               <input type="text" formControlName="total" name="total" class="form-control" [disabled]="true" >

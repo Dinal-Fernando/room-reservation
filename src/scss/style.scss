@@ -49,7 +49,7 @@
   align-content: center;
   text-decoration:none;
   background: #4a54df;
-  box-shadow: 0 0 3px #343a92;
+  box-shadow: 0 0 3px #141fb6;
   font-size:20px;
   font-weight:bold;
 }
@@ -78,11 +78,27 @@
   .toast-message.ng-star-inserted{
     color: rgb(99, 0, 0) !important;
   }
- 
   .padding{
     margin : 50px;
+    width  : 520px;
   }
-  // btn-css
+  // .card{
+  //   border-radius: 20px;
+  // }
+  .card {
+    background-color: #FFFFFF;
+    padding: 1px 0;
+    width: 100%;
+    border-radius: 6px;
+    color: rgba(0,0,0, 0.87);
+    background: #fff; }
+
+	.calendar {
+        box-shadow: #C3C3C3;
+		}
+
+
+
   .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active, .show > .btn-primary.dropdown-toggle{
       color: #fff;
       background-color: rgb(51, 30, 173);

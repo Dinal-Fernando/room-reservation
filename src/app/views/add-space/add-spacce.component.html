@@ -14,10 +14,15 @@
           <table class="table table-striped">
             <thead class="table-info">
               <tr>
-                <th>Room Number </th>
+                <th>Room Number</th>
                 <th>Price</th>
                 <th>Activity Status</th>
+                <th>A/C</th>
+                <th>Attached Bathroom</th>
+                <th>Smoking</th>
                 <th>Room Type</th>
+                <th>Beds</th>
+                <th>Maximum People</th>
                 <th>Edit Room Details</th>
                 <th>Delete Room</th>
               </tr>
@@ -34,7 +39,30 @@
                     <span class="switch-slider" data-checked="On" data-unchecked="OFF"></span>
                   </label>
                 </td>
+                <td>
+                  <label class="switch switch-label switch-primary">
+                    <input type="checkbox" class="switch-input" [checked]="room.ac"
+                      (click)="toggleACClicked(room)" [disabled]="toggleDisable">
+                      <span class="switch-slider" data-checked="&#x2713;" data-unchecked="&#x2715;"></span>
+                  </label>
+                </td>
+                <td>
+                  <label class="switch switch-label switch-primary">
+                    <input type="checkbox" class="switch-input" [checked]="room.attached_bathroom"
+                      (click)="toggleAttachedClicked(room)" [disabled]="toggleDisable">
+                      <span class="switch-slider" data-checked="&#x2713;" data-unchecked="&#x2715;"></span>
+                  </label>
+                </td>
+                <td>
+                  <label class="switch switch-label switch-primary">
+                    <input type="checkbox" class="switch-input" [checked]="room.smoking"
+                      (click)="toggleSmokingClicked(room)" [disabled]="toggleDisable">
+                      <span class="switch-slider" data-checked="&#x2713;" data-unchecked="&#x2715;"></span>
+                  </label>
+                </td>
                 <td>{{room.category}}</td>
+                <td>{{room.beds}}</td>
+                <td>{{room.max_persons}}</td>
                 <td>
                   <button type="button" (click)="updateValues(room)" data-target="#editServiceModal" class="btn btn-sm btn-primary">Update</button>
                 </td>
@@ -136,6 +164,38 @@
                       <small class="text-danger" [class.d-none]="category.valid || category.untouched">Please choose a category</small>
                     </div>
                   </div>
+                  <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="select1">A/C</label>
+                    <div class="col-md-9">
+                      <input type="checkbox" #ac="ngModel" name="ac"  [value]="ac.value"  ngModel>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="select1">Attached Bathroom</label>
+                    <div class="col-md-9">
+                      <input type="checkbox" #attached_bathroom="ngModel" name="attached_bathroom" [value]="attached_bathroom.value"   ngModel>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="select1">Smoking</label>
+                    <div class="col-md-9">
+                      <input type="checkbox" #smoking="ngModel" name="smoking" [value]="smoking.value"  ngModel>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="text-input">Beds</label>
+                      <div class="col-md-9">
+                        <input type="text" required #bed="ngModel" name="bed" [class.is-invalid]="bed.invalid && bed.touched" placeholder="Enter the number of bed.." class="form-control" ngModel>
+                        <small class="text-danger" [class.d-none]="bed.valid || bed.untouched">Please enter the number of beds</small>
+                      </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="text-input">Maximum People</label>
+                      <div class="col-md-9">
+                        <input type="text" required #max_persons="ngModel" [class.is-invalid]="max_persons.invalid && max_persons.touched" placeholder="Enter maximum people allowed" class="form-control" name="max_persons" ngModel>
+                        <small class="text-danger" [class.d-none]="max_persons.valid || max_persons.untouched">Please enter a maximum people</small>
+                      </div>
+                  </div>
               <div class="card-footer">
                 <button type="submit" [disabled]="addRoomForm.form.invalid" [disabled]="clicked" class="btn btn-sm btn-primary"><i class="fa fa-dot-circle-o"></i> Submit</button>
                 <button type="reset" class="btn btn-sm btn-danger" (click)="resetForm(addRoomForm)"><i class="fa fa-ban"></i> Reset</button>
@@ -186,7 +246,7 @@
         </div>
         <div class="modal-body">
           <div class="form-group row">
-           <label class="col-md-3 col-form-label" for="text-input">Room Number</label>
+           <label class="col-md-3 col-form-label" for="text-input">Room Number:</label>
             <div class="col-md-9">
             <input type="text" class="form-control" #room_number="ngModel" [(ngModel)]="selected_room_number"
               [ngModelOptions]="{standalone: true}" name="room_number" placeholder="{{room.room_number}}" required ngModel>
@@ -194,10 +254,24 @@
             </div>
           </div>
           <div class="form-group row">
-            <label class="col-md-3 col-form-label" for="text-input">Price</label>
+            <label class="col-md-3 col-form-label" for="text-input">Price:</label>
               <div class="col-md-9">
                 <input type="text" required #roomPrice="ngModel" [(ngModel)]="selected_room_price" [class.is-invalid]="roomPrice.invalid && roomPrice.touched" class="form-control" name="roomPrice" ngModel>
                 <small class="text-danger" [class.d-none]="roomPrice.valid || roomPrice.untouched">Please add a price</small>
+              </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="text-input">Number of bed:</label>
+              <div class="col-md-9">
+                <input type="text" required #beds="ngModel" [(ngModel)]="selected_beds" [class.is-invalid]="beds.invalid && beds.touched" class="form-control" name="beds" ngModel>
+                <small class="text-danger" [class.d-none]="beds.valid || beds.untouched">Please add a price</small>
+              </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="text-input">Maximum allowed in room:</label>
+              <div class="col-md-9">
+                <input type="text" required #max_persons="ngModel" [(ngModel)]="selected_max_persons" [class.is-invalid]="max_persons.invalid && max_persons.touched" class="form-control" name="max_persons" ngModel>
+                <small class="text-danger" [class.d-none]="max_persons.valid || max_persons.untouched">Please add a price</small>
               </div>
           </div>
           <div class="form-group row">

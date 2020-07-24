@@ -218,8 +218,7 @@ export class AddEmployeeComponent implements OnInit {
   }
   
   toggleClicked(user) {
-    if(confirm("Are you sure to change activity status of employee?")){
-    this.toggleDisable = true
+     this.toggleDisable = true
     this.selected_user = user
     this.is_page_loading = true
     let data
@@ -254,7 +253,6 @@ export class AddEmployeeComponent implements OnInit {
         this.clicked = false
       }
     ); 
-    }
   }
 
   changeActivation() {
