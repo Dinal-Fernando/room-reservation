@@ -968,6 +968,7 @@ export class DayNewComponent implements OnInit {
   }
 
   processRoom(roomForm){
+  
   }
 
   showPrice(value){
@@ -977,10 +978,7 @@ export class DayNewComponent implements OnInit {
   changeAddBookings(){   
     this.room_list_total.length =0;
     this.room_list.length =0;
-    this.registerForm.reset({
-      mealName : this.registerForm.get('mealName').value, 
-    });
+    this.registerForm.reset();
     this.detailsForm.reset();
   }
-
 }
