@@ -12,6 +12,18 @@ export class RoomsService {
     getRooms(page, limit){
       return this.commonService.getData('room/getbypage/?page='+page+'&limit='+limit);
     }
+    
+    getMeals(){
+      return this.commonService.getData('reservation/getmeal/');
+    }
+
+    getMethods(){
+      return this.commonService.getData('reservation/getmethod/');
+    }
+
+    getChannel(){
+      return this.commonService.getData('reservation/getchannel/');
+    }
 
     addRooms(room){
       console.log('room/save/'+ room)

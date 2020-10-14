@@ -30,6 +30,7 @@ export class LoginComponent {
       username: username,
       password: password
     }
+    
     this.employeeService.verifyUser(model).then(res => {
       this.is_loading = false
       if (res['success']) {
@@ -37,7 +38,7 @@ export class LoginComponent {
         localStorage.setItem("onepay_rt", res['Refresh_Token']);
         localStorage.setItem("onepay_t", res['Access_Token']);
         //localStorage.setItem("onepay_user", JSON.stringify(res['type']));
-        this.router.navigateByUrl('/bookings/day');
+        this.router.navigateByUrl('/bookings/day-new');
 
       } else {
         this.toastr.error("Invalid Authentication Credentials", "Oh Snap")
@@ -50,5 +51,6 @@ export class LoginComponent {
     );
 
   }
+
 
 }

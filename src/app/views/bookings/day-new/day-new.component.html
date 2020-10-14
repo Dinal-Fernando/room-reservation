@@ -1,0 +1,566 @@
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' />
+  </head>
+  <body>
+    <div class="animated fadeIn">
+      <div class="card  card-accent-primary">
+        <div class="card-header">
+          <i class="icon-calendar"></i> Calendar
+          <div class="float-right">
+            <button type="button" class="round-button round-button-circle" data-toggle="modal" data-toggle="modal" data-target="#largeModal" (click)="largeModal.show()"> + </button>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class='app'>
+            <full-calendar
+              #calendar
+              defaultView="dayGridMonth"
+              [header]="{
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,resourceTimelineDay,resourceTimelineWeek,listWeek'
+              }"
+              [plugins]     ="calendarPlugins"
+              [weekends]    ="calendarWeekends"
+              [events]      ="calendarEvents"
+
+              schedulerLicenseKey="GPL-My-Project-Is-Open-Source"
+              [resourceColumns]  ="resourcecolumns"
+              [resources]   ="resourcelist"
+           
+              selectHelper  ="true"
+              navLinks      ="true"
+              editable      ="true"
+             
+              (eventClick)  ="eventClick($event)" 
+             
+              navLinks      ="true"
+              eventColor    ='#378006'
+            ></full-calendar>
+            <div *ngIf="is_loading">
+              <div colspan="6" class="text-center padding-top">
+                <div>
+                  <div class="lds-spinner margin-top">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
+                </div>
+              </div>
+            </div> 
+            <!--Next-->  
+          </div>
+        </div>
+      </div>
+    </div>
+
+            <!--Detail Model-->
+            <div bsModal #detailModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-primary" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Details of Bookings</h4>
+                    <button type="button" class="close" (click)="detailModal.hide()" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>                   
+                  </div>  
+                  <div class="modal-body">
+                    <!--Form starts here-->
+                    <div class="card">
+                      <div class="card-header">
+                        <strong>Details</strong>bookings
+                      </div>
+                      <div class="card-body">                  
+                          <div class="row">
+                            <div class="form-group col-sm-6">
+                             <label  for="text-input">Employee Name:</label>            
+                             <input type="text" class="form-control" #employee_name="ngModel" [(ngModel)]="selected_employee"
+                               [ngModelOptions]="{standalone: true}" name="employee_name" placeholder="" [disabled]="true" ngModel/>                  
+                            </div>
+                            <div class="form-group col-sm-6">
+                             <label  for="text-input">Client Name:</label>               
+                             <input type="text" class="form-control" #client_name="ngModel" [(ngModel)]="selected_client_name"
+                               [ngModelOptions]="{standalone: true}" name="client_name" placeholder="" [disabled]="true" ngModel/>         
+                            </div>
+                           </div>
+                           <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">Contact :</label>
+                             <div class="col-md-3">
+                             <input type="text" class="form-control" #country_code="ngModel" [(ngModel)]="selected_dial_code"
+                               [ngModelOptions]="{standalone: true}" name="country_code" placeholder="" [disabled]="true" ngModel/>                      
+                             </div>                                            
+                             <div class="col-md-6">
+                             <input type="text" class="form-control" #mobile_number="ngModel" [(ngModel)]="selected_mobile"
+                               [ngModelOptions]="{standalone: true}" name="mobile_number" placeholder="" [disabled]="true" ngModel/>                    
+                             </div>
+                          </div>              
+                          <div *ngFor="let detail of DetailsBookingList; let i = index" >    
+                          <strong>Room Detail</strong>
+                            <div class="form-group row">
+                              <label class="col-md-3 col-form-label" for="text-input">Room Number:</label>
+                              <div class="col-md-9">
+                              <input type="text" class="form-control" #room_number="ngModel" [(ngModel)]="detail.title"
+                                [ngModelOptions]="{standalone: true}" name="room_number" placeholder=""  [disabled]="true" ngModel/>  
+                              </div>
+                            </div>                         
+                            <div class="form-group row">
+                              <label class="col-md-3 col-form-label" for="text-input">Check in date & time</label>
+                              <div class="col-md-9">
+                              <input type="text" class="form-control" #checkin="ngModel" [(ngModel)]="detail.start"
+                                [ngModelOptions]="{standalone: true}" name="checkin" placeholder="" [disabled]="true" ngModel/>                  
+                              </div>
+                            </div>
+                            <div class="form-group row">
+                              <label class="col-md-3 col-form-label" for="text-input">Check out date & time</label>
+                              <div class="col-md-9">
+                              <input type="text" class="form-control" #checkout="ngModel" [(ngModel)]="detail.end"
+                                [ngModelOptions]="{standalone: true}" name="checkout" placeholder="" [disabled]="true" ngModel/>                  
+                              </div>
+                            </div>
+                            <div class="form-group row">
+                              <label class="col-md-3 col-form-label" for="text-input">Price</label>
+                              <div class="col-md-9">
+                              <input type="text" class="form-control" #price="ngModel" [(ngModel)]="detail.price"
+                                [ngModelOptions]="{standalone: true}" name="price" placeholder="" [disabled]="true" ngModel/>                  
+                              </div>
+                            </div>
+                        
+                            <div>
+                            <label>Checked Out? </label> 
+                              <div class="form-group">
+                                <label class="switch switch-label switch-primary">
+                                  <input type="checkbox" class="switch-input" [checked]="selected_check_checkedout" [disabled]="selected_check_checkedout"
+                                    (click)="toggleClickedCheckOut(detail.id)">
+                                  <span class="switch-slider" data-checked="Yes" data-unchecked="NO"></span>
+                                </label>
+                              </div>
+                            </div> 
+                            <div>
+                              <label>Cancelled? </label> 
+                                <div class="form-group">
+                                <label class="switch switch-label switch-primary">
+                                  <input type="checkbox" class="switch-input" [checked]="selected_check_cancelled" [disabled]="selected_check_cancelled" 
+                                    (click)="toggleClickedCancel(detail.id,reasonValue)">
+                                  <span class="switch-slider" data-checked="Yes" data-unchecked="NO"></span>
+                                </label>
+                              </div>
+                            </div>
+                            <div  *ngIf="show && i==i">
+                              <label>Reason for cancel? </label> 
+                                <div class="form-group">
+                                <label class="col-md-9">
+                                  <input type="text" class="form-control" name="reason" [(ngModel)]="selected_add_reason" placeholder="Enter a reson for cancelling..." ngModel/>                  
+                                </label>
+                                <button type="button" (click)="cancelReason(detail.id)" class="btn btn-block btn-primary">Cancel Booking</button>
+                              </div>
+                            </div>
+                          </div>     
+                          <div>
+                            <strong>Total: </strong>
+                            <div class="form-group">
+                              <input type="text" #total="ngModel" [(ngModel)]="total_detail_price" id="nf-client-price" name="total_price" class="form-control" [disabled]="true" ngModel>
+                            </div>
+                          </div> 
+                    </div>                 
+                  </div>                  
+                 </div>
+                </div>
+              </div>
+            </div>
+            <!--end model-->
+
+            <div bsModal #largeModal="bs-modal" [config]="{backdrop: 'static'}" class="modal hide fade in" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Add Bookings</h4>       
+                    <button type="button" class="close" (click)="close()" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <!--Form starts here-->
+                      <form  [formGroup]="detailsForm" >
+                          <!-- Nav tabs -->
+                        <div class="card">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <div class="form-group row">
+                                    <div class="card col-6">   
+                                    <div class="card-body">   
+                                        <ng-template>Client Information</ng-template>                                                         
+                                        <div class="form-group">
+                                            <label >Full name </label>
+                                            <input type="text" formControlName="client_name" name="client_name" class="form-control" placeholder="Enter name.." required >
+                                            <!-- <span class="help-block">Please enter your email</span> -->
+                                        </div>
+                                    
+                                        <label >Phone Number</label>
+                                            <div class="form-group">
+                                            <ngx-intl-tel-input                                        
+                                            [inputId]="'adsasd'"
+                                            [cssClass]="'custom'" 
+                                            [preferredCountries]="preferredCountries"
+                                            [enableAutoCountrySelect]="false" 
+                                            [enablePlaceholder]="true" 
+                                            [searchCountryFlag]="true"
+                                            [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+                                            [selectFirstCountry]="false" 
+                                            [selectedCountryISO]="CountryISO.SriLanka"
+                                            [maxLength]="15" 
+                                            [tooltipField]="TooltipLabel.Name" 
+                                            [phoneValidation]="true" 
+                                            [separateDialCode]="separateDialCode"
+                                            formControlName="phone"
+                                            name="phone" required >
+                                            </ngx-intl-tel-input>
+                                        </div>
+                  
+                                        <div class="form-group">
+                                            <label for="nf-client-nic">Nic</label>
+                                            <input type="text" formControlName="nic"  name="nic" class="form-control" placeholder="Enter nic.." required >
+                                            <!-- <span class="help-block">Please enter your email</span> -->
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="nf-email">Email </label>
+                                            <input type="email" formControlName="email"  name="email" class="form-control" placeholder="Enter Email.." required >
+                                            <!-- <span class="help-block">Please enter your email</span> -->
+                                        </div>   
+                                        <div class="form-group">
+                                            <label for="nf-client-nic">Channel</label>
+                                            <select required  formControlName="channel" name="channel" (ngModelChange)="selected($event)" class="form-control" required>
+                                            <option value="">Please select</option>
+                                            <option *ngFor="let channell of channelList"  [value]="channell.id"  >{{channell.channel}}</option>
+                                            </select>
+                                        </div>
+
+                                    </div>                   
+                                    </div>
+                                    <div class="card col-6">
+                                        <div class="card-body">
+                                            <ng-template>Total</ng-template>
+                                            <strong>Total: </strong>
+                                            <input type="text" formControlName="total" name="total" class="form-control"required  readonly>
+                                        
+                                            <label for="nf-client-nic">Payment Method</label>
+                                            <select required  formControlName="method" name="method" (ngModelChange)="selected($event)" class="form-control" required>
+                                            <option value="">Please select</option>
+                                            <option *ngFor="let channell of methodList"  [value]="channell.id"  >{{channell.method}}</option>
+                                            </select>
+                                        
+                                            <label for="nf-client-nic">Amount Paid</label>
+                                            <input type="text" class="form-control" placeholder="Enter Amount   paid.." formControlName="amount" name="amount" required >
+                                        </div>  
+                                    </div>
+                                </div>
+                                <button  class="button button2" data-toggle="modal" (click)="add_room_open()">  Add Rooms  </button>
+
+                                <div class="row">
+                                <div class="col-6 col-sm-6 col-lg-6 " *ngFor="let each_room of room_list_total">              
+                                  <div class="card card-accent-primary color">
+                                    <div class="card-body">
+                                      <div class="tab-content ml-1" id="myTabContent">
+                                        <div class="tab-pane fade show active" id="basicInfo" role="tabpanel"
+                                            aria-labelledby="basicInfo-tab">
+                                            <div class="row">
+                                              <div class="col-md-4">
+                                                  <label class="lable_s">Room</label>
+                                              </div>
+                                              <div class="col-md-8">
+                                               Room {{each_room.room}} ~ {{each_room.price}}/=
+                                              </div> 
+                                            </div>
+                                            <hr>
+                                            <div class="row">
+                                              <div class="col-md-4">
+                                                  <label class="lable_s">Meal Cost</label>
+                                              </div>
+                                              <div class="col-md-8">
+                                                {{each_room.room_meal_price}}
+                                              </div>
+                                            </div>
+                                            <hr>
+                                            <div class="row">
+                                              <div class="col-md-4">
+                                                  <label class="lable_s">Check In </label>
+                                              </div>
+                                              <div class="col-md-8">
+                                                {{each_room.checkin}}
+                                              </div>
+                                            </div>
+                                            <hr>
+                                            <div class="row">
+                                              <div class="col-md-4">
+                                                  <label class="lable_s">Check out</label>
+                                              </div>
+                                              <div class="col-md-8">
+                                                {{each_room.checkout}}
+                                              </div>
+                                            </div>
+                                            <hr>
+                                            <div class="row">
+                                              <div class="col-md-4">
+                                                  <label class="lable_s">Adults</label>
+                                              </div>
+                                              <div class="col-md-8">
+                                                {{each_room.adults}}
+                                              </div>
+                                            </div>
+                                            <hr> 
+                                            <div class="row">
+                                              <div class="col-md-4">
+                                                  <label class="lable_s">Children </label>
+                                              </div>
+                                              <div class="col-md-8">
+                                                {{each_room.children}}
+                                              </div>
+                                            </div> 
+                                            <hr> 
+                                            <div class="form-group row float-right">
+                                          
+                  
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                        </div>
+                    </div>
+                       <div class="card-footer">
+                        <button type="submit"  class="btn btn-sm btn-primary" (click)="processForm()"><i class="fa fa-dot-circle-o"></i> Submit</button>
+                        <button type="reset" class="btn btn-sm btn-danger" (click)="changeAddBookings()"><i class="fa fa-ban"></i> Reset</button>
+                      </div>   
+
+                          </div>
+                              <div *ngIf="is_loading">
+                                <div colspan="6" class="text-center padding-top">
+                                  <div>
+                                    <div class="lds-spinner margin-top">
+                                      <div></div>
+                                      <div></div>
+                                      <div></div>
+                                      <div></div>
+                                      <div></div>
+                                      <div></div>
+                                      <div></div>
+                                      <div></div>
+                                      <div></div>
+                                      <div></div>
+                                      <div></div>
+                                      <div></div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                        </form>
+                    <!--Form ends here-->
+                  </div>             
+                </div><!-- /.modal-content -->
+              </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+            <!--Next-->
+
+      <div bsModal #roomModel="bs-modal" [config]="{backdrop: 'static'}" class="modal hide fade in" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="myModalLabel">Save a Room </h4>
+            </div>
+            <div class="modal-body">
+                      <form [formGroup]="registerForm" (ngSubmit)="onSubmit( registerForm )">
+                            <div class="row">
+                               <div class="col-sm-6">
+                                  <div class="form-group">
+                                        <label>Room</label>
+                                        <select required type="text" formControlName="room" class="form-control"  (ngModelChange)="selected($event)" [ngClass]="{ 'is-invalid': submitted && f.room.errors }">
+                                          <option value="">Please select</option>
+                                          <option *ngFor="let roomy of roomList"  [value]="roomy.id"  >{{roomy.room_number}} ~ Rs.{{roomy.price}} ~ {{roomy.category}}</option>
+                                          </select>
+                                        <div *ngIf="submitted && f.room.errors" class="invalid-feedback">
+                                              <div *ngIf="f.room.errors.required">room is required</div>
+                                        </div>
+                                     </div>
+                               </div> 
+                               <div class="col-sm-6">
+                                  <div class="form-group">
+                                     <label>Price</label>
+                                     <input type="number" formControlName="price" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.price.errors }" />
+                                     <div *ngIf="submitted && f.price.errors" class="invalid-feedback">
+                                      <div *ngIf="f.price.errors.required">price is required</div>
+                                </div>
+                                  </div>
+                               </div>
+                               <div class="col-sm-6">
+                                     <div class="form-group">
+                                        <label>Check in time</label>
+                                        <input type="datetime-local" formControlName="checkin" (change)='getCheckInTIme()' name="checkin" class="form-control" placeholder="Enter check in time.." [ngClass]="{ 'is-invalid': submitted && f.checkin.errors }" />
+                                        <div *ngIf="submitted && f.checkin.errors" class="invalid-feedback">
+                                           <div *ngIf="f.checkin.errors.required">checkin required</div>
+                                          
+                                        </div>
+                                     </div>
+                                  </div>
+                              <div class="col-sm-6">
+                                    <div class="form-group">
+                                       <label>Check out time</label>
+                                       <input type="datetime-local" formControlName="checkout" (change)='getCheckOutTIme()' name="checkout" class="form-control" placeholder="Enter check out time.." [ngClass]="{ 'is-invalid': submitted && f.checkout.errors }" />
+                                       <div *ngIf="submitted && f.checkout.errors" class="invalid-feedback">
+                                          <div *ngIf="f.checkout.errors.required">checkout required</div> 
+                                       </div>
+                                    </div>
+                                 </div>                              
+                               <div class="col-sm-12">
+                                  <div class="form-group">
+                                     <label>Meals on first day</label>
+                                      <div formArrayName="meals">
+                                        <div *ngFor="let mealName of detailsMeals().controls; let j=index">         
+                                            <div [formGroupName]="j">
+                                                  <input type="checkbox" #test (change)="checkChange(j,mealList[j], test.checked, test1.value)" > * {{mealList[j].meal}}
+                                                  <input type="text" #test1 class="form-control"  [value]="mealList[j].price" >
+                                            </div>                    
+                                        </div>
+                                      </div>
+                                  </div>
+                               </div>                            
+                               <div class="col-sm-6">
+                                <div class="form-group">
+                                   <label>Number of adults</label>
+                                   <input type="text" formControlName="adults" name="adults" class="form-control" placeholder="Enter no of adults.." [ngClass]="{ 'is-invalid': submitted && f.adults.errors }" />
+                                   <div *ngIf="submitted && f.adults.errors" class="invalid-feedback">
+                                      <div *ngIf="f.adults.errors.required">adults required</div> 
+                                   </div>
+                                </div>
+                             </div>                          
+                             <div class="col-sm-6">
+                              <div class="form-group">
+                                 <label>Number of children</label>
+                                 <input type="text" formControlName="children" name="children" class="form-control" placeholder="Enter children number.." [ngClass]="{ 'is-invalid': submitted && f.children.errors }" />
+                                 <div *ngIf="submitted && f.children.errors" class="invalid-feedback">
+                                    <div *ngIf="f.children.errors.required">children required</div> 
+                                 </div>
+                              </div>
+                            </div>
+                   </div>
+                   
+            <div *ngIf="clicked"> 
+              <div class="card-body">
+              <full-calendar
+                    #calenderId     
+                    defaultView="dayGridMonth"
+                    [header]="{
+                      left: 'prev,next today',
+                      center: 'title',
+                      right: 'dayGridMonth,resourceTimelineDay,resourceTimelineWeek,listWeek'
+                    }"
+                    [plugins]     ="calendarPlugins"
+                    [weekends]    ="calendarWeekends"
+                    [events]      ="roomCalendarEvents"
+                    schedulerLicenseKey="GPL-My-Project-Is-Open-Source"
+                    [resourceColumns]  ="resourcecolumns"
+                    [resources]   ="resourcelist"
+                    selectable    ="true"
+                    selectHelper  ="true"
+                    navLinks      ="true"
+                    editable      ="true"                                             
+              ></full-calendar>
+            </div>  
+          </div>                                  
+          <br>
+                   <button type="submit"  [disabled]="registerForm.invalid" class="btn btn-primary">Submit</button>
+                  </form>
+            </div>
+
+              <div *ngIf="formloader">
+                <div colspan="6" class="text-center padding-top">
+                  <div>
+                    <div class="lds-spinner margin-top">
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+              </div> 
+
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-dark" data-dismiss="modal" (click) = "roomModel.hide()">Close</button>
+                  
+                  </div>
+                </div>
+              </div>
+
+          </div>
+
+        <!--Cancel booking Model-->
+        <!-- <div bsModal #checkoutModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <form>
+                <div class="modal-header">
+                  <h4 class="modal-title">Checkout </h4>
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                    (click)="cancel()">&times;</button>
+                </div>
+                <div class="modal-body">
+                  <p>Are you sure you want to checkout? Hoping to see you soon!!</p>
+                </div>
+                <div class="modal-footer">
+                  <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" (click)="cancel()">
+                  <input type="submit" class="btn btn-info"  value="Save" (click)="checkoutBooking($event)">
+                </div>
+              </form>
+            </div>
+          </div>
+        </div> -->
+        <!--category activity -->
+
+    <!-- The Modal
+    <div class="modal" id="myModal" [style.display]="showModal ? 'block' : 'none'">
+      <div class="modal-dialog">
+        <div class="modal-content">
+        
+        
+          <div class="modal-header">
+            <h4 class="modal-title">{{ name }}</h4>
+            <button type="button" class="close" data-dismiss="modal" (click) = "hide()">&times;</button>
+          </div>
+          
+          Modal body 
+          <div class="modal-body">
+            Event Start From : {{ date }}
+          </div>
+          
+          Modal footer 
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal" (click) = "hide()">Close</button>
+          </div>
+          
+        </div>
+    </div> -->
+  
+
+  </body>
+</html>

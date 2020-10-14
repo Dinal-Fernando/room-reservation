@@ -23,12 +23,13 @@ import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
 
 //callap
 import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { DayNewComponent } from './day-new/day-new.component';
 
 @NgModule({
   declarations: [
     DayComponent,
     MonthComponent, 
-    ListComponent],
+    ListComponent, DayNewComponent],
   imports: [
     CommonModule,
     TabsModule,

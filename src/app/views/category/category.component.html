@@ -1,15 +1,19 @@
+<div class="card">
 
-  <div class="col-lg-12">
-      <div class="card">
-        <div class="card-header">
-          <i class="fa fa-align-justify"></i>Room Categories
-          <div class="float-right">
+  <!--Top thin-->
+    <div class="col-lg-12 card card-accent-primary  bg-text">
+        <div class="card  card-accent-primary color">
+          <div class="card-header">
+            <div class="table-wrapper">
             <div class="row">
-              <div class="col-6 col-sm-5 col-md-2 col-xl mb-3 mb-xl-0">
-                <button type="button" (click)="primaryModal.show()" class="btn btn-block btn-primary">Add category</button>
-              </div>
-           </div>
-     </div>
+                <div class="col-sm-6">
+                    <h4 class="table-head">Room Types </h4>
+                </div>
+                <div class="col-sm-6">
+                  <button type="button" (click)="primaryModal.show()" class="btn btn-primary add-user-rolls">Add category</button>
+                </div>
+            </div>
+            </div>
         </div>
         <div class="card-body">
           <table class="table  table-striped">
@@ -71,6 +75,7 @@
       </div>
     </div>
 
+  </div>
   <!--Pop up Model  Add category-->
   <div bsModal #primaryModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-primary" role="document">
@@ -102,7 +107,6 @@
                       <label class="col-md-3 col-form-label" for="firstName">Is-Active</label>
                         <div class="col-md-9 col-form-label">
                             <div class="form-check form-check-inline mr-1" id="inline-radios">
-                              <!-- <input class="form-check-input" type="radio" name="inline-radios" id="true" name="inline-radios"> -->
                               <input class="form-check-input" type="radio" value="true" [(ngModel)]="is_active" name="activity"  [checked]="true"  #activity="ngModel" />
                               <label class="form-check-label" for="inlineRadio1">True</label>
                             </div>
@@ -124,7 +128,7 @@
   </div><!-- /.modal -->
 
 <!--Is_active update Category popup-->
-<div bsModal #activeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+<!-- <div bsModal #activeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
 aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -144,7 +148,9 @@ aria-hidden="true">
       </form>
     </div>
   </div>
-</div><!--category activity-->
+</div> -->
+
+<!--category activity-->
 
 <!-- Delete Modal HTML -->
 <div bsModal #deleteServiceModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"

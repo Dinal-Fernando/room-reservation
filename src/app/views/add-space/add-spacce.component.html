@@ -1,16 +1,25 @@
-   <!--Top thin-->
-  <div class="col-lg-12">
-      <div class="card">
+<div class="card">
+
+<!--Top thin-->
+  <div class="col-lg-12 card card-accent-primary  bg-text">
+      <div class="card  card-accent-primary ">
         <div class="card-header">
-          <i class="fa fa-align-justify"></i>Rooms available
-          <div class="float-right">
-            <div class="row"><div class="col-6 col-sm-5 col-md-2 col-xl mb-3 mb-xl-0">
-                <button type="button" (click)="addRoomModal.show()" class="btn btn-block btn-primary">Add rooms</button>
-           </div>
+          <div class="table-wrapper">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h4 class="table-head">Rooms </h4>
+                </div>
+            
+              <div class="col-sm-6">
+                <button type="button" (click)="addRoomModal.show()" class="btn btn-primary add-user-rolls">Add rooms</button>
+              </div>
+            </div>
+         </div>
+      
         </div>
-     </div>
-        </div>
+        
         <div class="card-body">
+          
           <table class="table table-striped">
             <thead class="table-info">
               <tr>
@@ -62,12 +71,12 @@
                 </td>
                 <td>{{room.category}}</td>
                 <td>{{room.beds}}</td>
-                <td>{{room.max_persons}}</td>
+                <td><i class="fa fa-user fa-lg mt-4"></i>  *{{room.max_persons}}</td>
                 <td>
-                  <button type="button" (click)="updateValues(room)" data-target="#editServiceModal" class="btn btn-sm btn-primary">Update</button>
+                  <button type="button" (click)="updateValues(room)" data-target="#editServiceModal" class="btn btn-sm btn-primary add-user-rolls">Update</button>
                 </td>
                 <td>
-                  <button type="button" (click)="deleteValues(room)" data-target="#deleteServiceModal" class="btn btn-sm btn-danger">Delete</button>
+                  <button type="button" (click)="deleteValues(room)" data-target="#deleteServiceModal" class="btn btn-sm btn-danger add-user-rolls">Delete</button>
                 </td>
               </tr>
               <tr *ngIf="roomList.length < 1 && !is_loading">
@@ -103,6 +112,7 @@
         </div>
       </div>
     </div>
+  </div>
     <!--/.col-->
   <!--/.row-->
 

@@ -63,7 +63,8 @@ import { AlertModule } from 'ngx-bootstrap/alert/ngx-bootstrap-alert';
 import { ModalModule } from 'ngx-bootstrap/modal/ngx-bootstrap-modal';
 import { AddSpacceComponent } from './views/add-space/add-spacce.component';
 import { DayComponent } from './views/bookings/day/day.component';
-import {MatTabsModule} from '@angular/material'
+import { MatTabsModule } from '@angular/material/tabs';
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -101,7 +102,8 @@ import {MatTabsModule} from '@angular/material'
     P500Component,
     LoginComponent,
     RegisterComponent,
-    CalendarComponent
+    CalendarComponent,
+   
   ],
   providers: [
     {
@@ -111,6 +113,7 @@ import {MatTabsModule} from '@angular/material'
     
     CommonServicesService,
 ],
-  bootstrap: [ AppComponent ]
+  bootstrap: [ AppComponent ],
+ 
 })
 export class AppModule { }

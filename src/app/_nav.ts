@@ -16,7 +16,7 @@ export const navItems: INavData[] = [
   },
   {
     name: 'Calendar',
-    url: '/bookings/day',
+    url: '/bookings/day-new',
     icon: 'icon-calendar'
   },
   /*{
@@ -34,12 +34,12 @@ export const navItems: INavData[] = [
     name: 'Room Management'
   },
   {
-    name: 'Add Room ',
+    name: 'Rooms ',
     url: '/add-space/add-spacce',
     icon: 'icon-pencil'
   },
   {
-    name: 'Add Category',
+    name: 'Room Categories',
     url: '/category/category',
     icon: 'icon-pencil'
   },
@@ -48,7 +48,7 @@ export const navItems: INavData[] = [
     name: 'Employee Management'
   },
   {
-    name: 'Add New Employees',
+    name: 'Employees',
     url: '/employee/add-employee',
     icon: 'icon-pencil'
   },
@@ -280,5 +280,5 @@ export const navItems: INavData[] = [
   //   icon: 'icon-layers',
   //   variant: 'danger',
   //   attributes: { target: '_blank', rel: 'noopener' }
-  // }
+ // }
 ];

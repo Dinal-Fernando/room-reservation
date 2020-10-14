@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { DayNewComponent } from './day-new/day-new.component';
 
 import { DayComponent } from './day/day.component';
 import { ListComponent } from './list/list.component';
@@ -17,8 +18,8 @@ const routes: Routes = [
         redirectTo: 'day'
       },
       {
-        path: 'day',
-        component: DayComponent,
+        path: 'day-new',
+        component: DayNewComponent,
         data: {
           title: 'Day'
         }

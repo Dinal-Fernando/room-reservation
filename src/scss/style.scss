@@ -36,7 +36,6 @@
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
 @import "~ngx-toastr/toastr-bs4-alert";
-@import url('https://fonts.googleapis.com/css?family=Roboto:400,700|Material+Icons');
 
 .round-button {
   display:block;
@@ -76,7 +75,7 @@
     color: rgb(68, 0, 0) !important;
   }
   .toast-message.ng-star-inserted{
-    color: rgb(99, 0, 0) !important;
+    color: rgb(10, 10, 10) !important;
   }
   .padding{
     margin : 50px;
@@ -101,59 +100,59 @@
 
   .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active, .show > .btn-primary.dropdown-toggle{
       color: #fff;
-      background-color: rgb(51, 30, 173);
-      border-color:rgb(92, 30, 173);
+      background-color: rgb(28, 46, 212);
+      border-color:rgb(28, 30, 160);
       box-shadow:none!important;
   }
 
   .btn-primary:hover{
     color: #fff;
-    background-color: rgb(30, 32, 173);
-    border-color:rgb(80, 30, 173);
+    background-color: rgb(28, 46, 212);
+    border-color:rgb(28, 30, 160);
   }
 
   .btn-primary-new{
     color: #fff;
-    background-color: rgb(104, 186, 224);
-    border-color:rgb(80, 30, 173);
+    background-color: rgb(28, 46, 212);
+    border-color:rgb(28, 30, 160);
   }
   .btn-primary:disabled {
     color: #fff;
-    background-color: rgb(51, 30, 173);
-    border-color: rgb(39, 30, 173);
+    background-color: rgb(28, 46, 212);
+    border-color:rgb(28, 30, 160);
   }
   .btn-info {
     color: #23282c;
-    background-color: rgb(61, 30, 173);
-    border-color: rgb(30, 63, 173);
+    background-color: rgb(28, 46, 212);
+    border-color:rgb(28, 30, 160);
   }
   .btn-info:hover {
     color: #23282c;
-    background-color: rgb(30, 56, 173);
-    border-color: #1d1097;
+    background-color: rgb(28, 46, 212);
+    border-color:rgb(28, 30, 160);
   }
   .btn-primary:focus, .btn-primary.focus{
     box-shadow:none;
   }
   .form-control:focus{
     box-shadow:none;
-    border-color:rgb(88, 28, 185) ;
+    border-color:rgb(28, 46, 212) ;
   }
   button:focus {
-    outline: 1px auto rgb(51, 30, 173);
+    outline: 1px auto rgb(28, 46, 212);
   }
   .btn-info.disabled, .btn-info:disabled {
     color: #23282c;
-    background-color: rgb(32, 30, 173);
-    border-color: rgb(60, 44, 202);
+    background-color: rgb(28, 46, 212);
+    border-color:rgb(28, 30, 160);
   }
   .form-control:disabled{
     background-color: white;
   }
   .btn-info:not(:disabled):not(.disabled):active, .btn-info:not(:disabled):not(.disabled).active, .show > .btn-info.dropdown-toggle {
     color: #fff;
-    background-color: rgb(39, 30, 173);
-    border-color: rgb(30, 56, 173);
+    background-color: rgb(28, 46, 212);
+    border-color:rgb(28, 30, 160);
   }
   .btn-info:focus, .btn-info.focus {
     box-shadow:none!important;
@@ -243,9 +242,9 @@
   }
   // login-form
   .btn-primary{
-      background-color: rgb(91, 93, 216);
-      border-color: rgb(36, 136, 202);
-      color: white!important;
+    background-color: rgb(49, 150, 197);
+    border-color:rgb(49, 150, 197);
+    color: white!important;
   }
   .btn-primary{
       color: white;

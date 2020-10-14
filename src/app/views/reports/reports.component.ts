@@ -209,6 +209,7 @@ export class ReportsComponent implements OnInit {
      console.log(this.dataList)
       console.log(row.id)
     }
+    
     logNode(node: Node<any>) {
       console.log(node);
     }

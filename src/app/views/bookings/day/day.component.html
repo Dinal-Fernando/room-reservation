@@ -24,7 +24,7 @@
               [plugins]     ="calendarPlugins"
               [weekends]    ="calendarWeekends"
               [events]      ="calendarEvents"
-              (dateClick)   ="handleDateClick($event)"
+             
               schedulerLicenseKey="GPL-My-Project-Is-Open-Source"
               [resourceColumns]  ="resourcecolumns"
               [resources]   ="resourcelist"
@@ -32,9 +32,9 @@
               selectHelper  ="true"
               navLinks      ="true"
               editable      ="true"
-              (clickButton) ="clickButton($event.detail)"
+            
               (eventClick)  ="eventClick($event)" 
-              (clickButton) ="clickButton($event.detail)"
+           
               navLinks      ="true"
               eventColor    ='#378006'
             ></full-calendar>
@@ -68,12 +68,12 @@
                     <button type="button" class="close" (click)="detailModal.hide()" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>                   
-                  </div>
+                  </div>  
                   <div class="modal-body">
                     <!--Form starts here-->
                     <div class="card">
                       <div class="card-header">
-                        <strong>Details</strong> bookings
+                        <strong>Details</strong>bookings
                       </div>
                       <div class="card-body">                  
                           <div class="row">
@@ -197,7 +197,9 @@
                               <!--Reservation Details-->                 
                               <div formArrayName="details">
                                 <div *ngFor="let detail of details().controls; let empIndex=index">
+                                  
                                   <div [formGroupName]="empIndex">
+                                    {{empIndex}}
                                     <div [collapse]="isCollapsed">
                                     <div class="card"> 
                                       <button type="button" title="Remove"class="btn btn-sm btn-primary" (click)="removeDetail(empIndex)" >Remove Room</button>
@@ -226,28 +228,22 @@
                                           <div class="col-7">
                                               <label >Check-out time</label>
                                               <input type="datetime-local" formControlName="checkout"  (change)='getCheckOutTIme(empIndex)'   name="checkout" class="form-control"   required >   
-                                              <span class="text-danger" *ngIf="getContactsFormGroup(empIndex).controls['checkout'].touched && getContactsFormGroup(empIndex).controls['checkout'].hasError('required')">
-                                                Check out  is required! </span>
+                                              <!-- <span class="text-danger" *ngIf="getContactsFormGroup(empIndex).controls['checkout'].touched && getContactsFormGroup(empIndex).controls['checkout'].hasError('required')">
+                                                Check in  is required! </span> -->
                                           </div>
                                           <br>
                                           <div class="col-7">
-                                            <label for="nf-client-nic">Meals</label>
-                                            <div class="form-row">
-                                                <div class="col">
-                                                  <input type="checkbox">Breakfast
-                                                </div>
-                                                <div class="col">
-                                                  <input type="checkbox">Lunch
-                                                </div>
-                                                <div class="col">
-                                                  <input type="checkbox">Dinner
-                                                </div>
-                                                <div class="col">
-                                                 <input type="checkbox">Tea
-                                                </div>
-                                            </div>
+                                         <label>Meals on first day</label>
+                                         <!-- <div *ngFor="let mealName of mealList"> -->
+                                         <div formArrayName="meals">
+                                          <div *ngFor="let mealName of detailsMeals(empIndex).controls; let j=index">         
+                                              <div [formGroupName]="j">
+                                                    <input type="checkbox" #test (change)="checkChange(j ,empIndex,mealList[j], test.checked)" > * {{mealList[j].meal}}
+                                                    <input type="text" formControlName="price" class="form-control"  value="{{mealList[j].price}}" >
+                                              </div>                    
                                           </div>
-                                          <br>
+                                        </div>
+                                          </div>
                                           <div  class="col-12">
                                             <div class="form-row">
                                               <div class="col">
@@ -266,8 +262,6 @@
                                           <!-- <div  *ngIf="showEvents"> -->
                                             <div class="padding">
                                             <full-calendar
-                                                  formControlName="calendar" 
-                                                  name="calendar"
                                                   defaultView="dayGridMonth"
                                                   [header]="{
                                                     left: 'prev,next today',
@@ -311,13 +305,12 @@
                                           </div> 
                                     </div><!--Card div--> 
                                 </div>   
-                                <!-- <button type="button" class="btn btn-primary"(click)="collaps(empIndex)">Toggle collapse
-                                 </button>              -->
+                                <button type="button" title="Add"class="btn btn-sm btn-primary" (click)="addDetail(empIndex)">Add More Rooms</button>
                                 </div>        
                                 </div>
                               </div><!--Div formArrayName="details"-->
                               <label>If you need to add extra rooms please press the button below <strong>:</strong></label>
-                              <button type="button" title="Add"class="btn btn-sm btn-primary" (click)="addDetail()">Add More Rooms</button>
+
                             </tab>
                             <tab>   
                               <ng-template tabHeading>Client Information</ng-template>                 
@@ -363,7 +356,6 @@
                                   </div>
                                 </div>
                               </div>
-                            
                               <div class="form-group row">
                                 <div class="col-6">
                                   <div class="form-group">
@@ -372,16 +364,15 @@
                                     <!-- <span class="help-block">Please enter your email</span> -->
                                   </div>
                                 </div>
-                              </div>     
-                             
+                              </div>    
                               <div class="form-group row">
                                 <div class="col-6">
                                   <div class="form-group">
                                     <label for="nf-client-nic">Channel</label>
-                                    <select required  formControlName="channel" name="channel" class="form-control" required>
-                                      <option value="">Please select Channel</option>
-                                      <!-- <option *ngFor="let roomy of roomList"  [value]="roomy.id"  >{{roomy.room_number}} ~ Rs.{{roomy.price}} ~ {{roomy.category}}</option> -->
-                                    </select>                           
+                                    <select required  formControlName="channel" name="channel" (ngModelChange)="selected($event,empIndex)" class="form-control" required>
+                                      <option value="">Please select</option>
+                                      <option *ngFor="let channell of channelList"  [value]="channell.id"  >{{channell.channel}}</option>
+                                    </select>
                                   </div>
                                 </div>
                                </div>                    
@@ -394,19 +385,18 @@
                              </div>
                               <div class="col-7">
                                 <label for="nf-client-nic">Payment Method</label>
-                                    <select required  formControlName="channel" name="channel" class="form-control" required>
-                                      <option value="">Please select Channel</option>
-                                      <!-- <option *ngFor="let roomy of roomList"  [value]="roomy.id"  >{{roomy.room_number}} ~ Rs.{{roomy.price}} ~ {{roomy.category}}</option> -->
-                                    </select>  
+                                <select required  formControlName="method" name="method" (ngModelChange)="selected($event,empIndex)" class="form-control" required>
+                                  <option value="">Please select</option>
+                                  <option *ngFor="let channell of methodList"  [value]="channell.id"  >{{channell.method}}</option>
+                                </select>
                               </div>
                              <div class="col-7">
                              <label for="nf-client-nic">Amount Paid</label>
-                             <input type="text" class="form-control" placeholder="Enter Amount   paid.." required >
-                             <!-- <span class="help-block">Please enter your email</span> -->
+                             <input type="text" class="form-control" placeholder="Enter Amount   paid.." formControlName="amount" name="amount" required >
                             </div>
                             <div class="card-footer">
-                              <button type="submit" class="btn btn-sm btn-primary" [disabled]="!detailsForm.valid"  ><i class="fa fa-dot-circle-o"></i> Submit</button>
-                              <button type="reset" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> Reset</button>
+                              <button type="submit" class="btn btn-sm btn-primary" ><i class="fa fa-dot-circle-o"></i> Submit</button>
+                              <button type="reset" class="btn btn-sm btn-danger" (click)="currentPageLoad()"><i class="fa fa-ban"></i> Reset</button>
                             </div>   
                              </tab>
                               <div *ngIf="is_loading">
@@ -430,7 +420,7 @@
                                 </div>
                               </div>  
                           </tabset>
-                        </form>
+                      </form>
                     <!--Form ends here-->
                   </div>             
                 </div><!-- /.modal-content -->
@@ -471,14 +461,14 @@
                 <div class="modal-header">
                   <h4 class="modal-title">Checkout </h4>
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                    (click)="cancel()">&times;</button>
+                  >&times;</button>
                 </div>
                 <div class="modal-body">
                   <p>Are you sure you want to checkout? Hoping to see you soon!!</p>
                 </div>
                 <div class="modal-footer">
-                  <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" (click)="cancel()">
-                  <input type="submit" class="btn btn-info"  value="Save" (click)="checkoutBooking($event)">
+                  <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" >
+                  <input type="submit" class="btn btn-info"  value="Save" >
                 </div>
               </form>
             </div>

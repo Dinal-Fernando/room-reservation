@@ -185,7 +185,6 @@ export class AddSpacceComponent implements OnInit {
     this.category_id           = event.category_id;
     this.selected_beds         = event.beds;
     this.selected_max_persons  = event.max_persons
-    console.log("id"+ event.category_id);
     this.selected_room = event
     this.editServiceModal.show();
   }

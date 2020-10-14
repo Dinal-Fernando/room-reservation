@@ -58,7 +58,7 @@
     "bootstrap": "^4.4.1",
     "chart.js": "^2.9.2",
     "core-js": "^2.6.10",
-    "file-saver": "^2.0.2",
+    "    file-saver": "^2.0.2",
     "flag-icon-css": "^3.4.5",
     "font-awesome": "^4.7.0",
     "google-libphonenumber": "^3.2.10",

@@ -1,22 +1,587 @@
-<div class="animated fadeIn">
-    <div class="container">
-      <div class="card">
-        <!-- Nav tabs -->
-        <tabset>
-          <tab>
-            <ng-template tabHeading><i class="icon-settings"></i> Settings</ng-template>
-          
-          </tab>
-          <tab>
-            <ng-template tabHeading><i class="icon-list"></i> Menu &nbsp;<span class="badge badge-pill badge-danger">29</span></ng-template>
-          
-          </tab>
-          <tab>
-            <ng-template tabHeading><i class="icon-list"></i> Charts</ng-template>
-           
-          </tab>
-        </tabset>
-      </div><!--/.col-->
-    </div><!--/.row-->
+<div class="col-lg-12">
+  <div class="container animated fadeIn">
+      <div class="card card-accent-primary ">
+        <div class="card-body ">
+          <h1>Settings</h1>
+          <div class="card card-accent-primary ">
+            <div class="card-body ">
+              <tabset>
+                <tab heading="Method">
+                  <div class="container">
+                    <div class="table-wrapper">
+                        <div class="table-title">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <h4 class="table-head">Payment Options</h4>
+                                </div>
+                            
+                              <div class="col-sm-6">
+                                <input type="button" data-toggle="modal" class="btn btn-primary add-user-rolls"
+                                (click)="addMethodModal.show()" value="Add Payment method">
+                              </div>
+                          </div>
+                        </div>
+                        <br>
+                        <div class="row col-lg-12">
+                        <div class="col-6 col-sm-6 col-lg-6" *ngFor="let methodEach of methodList">
+                          <div class="card card-accent-primary">
+                            <div class="card-body ">
+                              
+                              <div class="tab-content ml-1 " id="myTabContent">
+                                <div class="tab-pane fade show active" id="basicInfo" role="tabpanel"
+                                    aria-labelledby="basicInfo-tab">
+                                    <div class="row">
+                                      <div class="col-md-4">
+                                          <label class="lable_s">Method Name</label>
+                                      </div>
+                                      <div class="col-md-8">
+                                        {{methodEach.method}}
+                                      </div> 
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                      <div class="col-md-4">
+                                          <label class="lable_s">Activity Status</label>
+                                      </div>
+                                      <div class="col-md-8">
+                                        <div class="form-group">
+                                          <label class="switch switch-label switch-primary">
+                                            <input type="checkbox" class="switch-input" [checked]="methodEach.is_active"
+                                            (click)="toggleClicked(methodEach)" [disabled]="toggleDisable">
+                                          <span class="switch-slider" data-checked="On" data-unchecked="OFF"></span>
+                                          </label>
+                                        </div>
+                                        
+                                      </div>
+                                    </div>
+                                    <div class="form-group row float-right">
+                                      <!---->
+                                      <div class="col-6">
+                                        <div class="card" (click)="updateMethod(methodEach)">
+                                          <div class="card-body p-3 clearfix">
+                                            <a type="button" (click)="updateMethod(methodEach)" data-toggle="modal" class="btn btn-update add-user-rolls">Update</a>
+                                          </div>
+                                        </div>
+                                      </div><!---->
+            
+                                      <div class="col-6">
+                                        <div class="card" (click)="deleteMethodValues(methodEach)">
+                                          <div class="card-body p-3 clearfix">
+                                            <a type="button" (click)="deleteMethodValues(methodEach)" data-toggle="modal" class="btn btn-delete add-user-rolls">Delete</a>
+                                          </div>
+                                        </div>
+                                      </div><!---->
+            
+                                    </div>
+                                    <hr>
+                                </div>
+                              </div>  
+                            
+                            </div>
+                            
+                          </div>
+                        </div>  
+
+                      </div>
+                        <br /><br />
+                    </div>
+                  </div>
+                </tab>
+                <tab heading="Menu">
+                  <div class="container">
+                    <div class="table-wrapper">
+                        <div class="table-title">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <h4 class="table-head">Menus </h4>
+                                </div>
+                            
+                              <div class="col-sm-6">
+                                <input type="button" data-toggle="modal" class="btn btn-primary add-user-rolls"
+                                (click)="addMealModal.show()" value="Add Menu ">
+                              </div>
+                          </div>
+                        </div>
+                        <br>
+
+                        <div class="row col-lg-12">
+                          <div class="col-6 col-sm-6 col-lg-6" *ngFor="let mealEach of mealsList">
+                            <div class="card card-accent-primary">
+                              <div class="card-body ">
+                                
+                                <div class="tab-content ml-1 " id="myTabContent">
+                                  <div class="tab-pane fade show active" id="basicInfo" role="tabpanel"
+                                      aria-labelledby="basicInfo-tab">
+                                      <div class="row">
+                                        <div class="col-md-4">
+                                            <label class="lable_s">Meal </label>
+                                        </div>
+                                        <div class="col-md-8">
+                                          {{mealEach.meal}}
+                                        </div> 
+                                      </div>
+                                      <hr>
+                                      <div class="row">
+                                        <div class="col-md-4">
+                                            <label class="lable_s">Price </label>
+                                        </div>
+                                        <div class="col-md-8">
+                                          {{mealEach.price}}
+                                        </div> 
+                                      </div>
+                                      <hr>
+                                      <div class="row">
+                                        <div class="col-md-4">
+                                            <label class="lable_s">Activity Status</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                          <div class="form-group">
+                                            <label class="switch switch-label switch-primary">
+                                              <input type="checkbox" class="switch-input" [checked]="mealEach.is_active"
+                                              (click)="toggleClickedMeal(mealEach)" [disabled]="toggleDisable">
+                                              <span class="switch-slider" data-checked="On" data-unchecked="OFF"></span>
+                                            </label>
+                                          </div>
+                                          
+                                        </div>
+                                      </div>
+                                      <div class="form-group row float-right">
+                                        <!---->
+                                        <div class="col-6">
+                                          <div class="card" (click)="updateMeal(mealEach)">
+                                            <div class="card-body p-3 clearfix">
+                                              <a type="button" (click)="updateMeal(mealEach)" data-toggle="modal" class="btn btn-update add-user-rolls">Update</a>
+                                            </div>
+                                          </div>
+                                        </div><!---->
+              
+                                        <div class="col-6">
+                                          <div class="card" (click)="deleteMealValues(mealEach)">
+                                            <div class="card-body p-3 clearfix">
+                                              <a type="button" (click)="deleteMealValues(mealEach)" data-toggle="modal" class="btn btn-delete add-user-rolls">Delete</a>
+                                            </div>
+                                          </div>
+                                        </div><!---->
+              
+                                      </div>
+                                      <hr>
+                                  </div>
+                                </div>  
+                              
+                              </div>
+                              
+                            </div>
+                          </div>  
+
+                          </div>
+
+                        <br /><br />
+                    </div>
+                  </div>
+                </tab>
+                <tab heading="Channel">
+                  <div class="container">
+                    <div class="table-wrapper">
+                        <div class="table-title">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <h4 class="table-head">Channel</h4>
+                                </div>
+                            
+                              <div class="col-sm-6">
+                                <input type="button" data-toggle="modal" class="btn btn-primary add-user-rolls"
+                                (click)="addChannelModal.show()" value="Add Channel ">
+                              </div>
+                          </div>
+                        </div>
+                        <br>
+
+                        <div class="row col-lg-12">
+                          <div class="col-6 col-sm-6 col-lg-6" *ngFor="let chanelEach of chanelList">
+                            <div class="card card-accent-primary">
+                              <div class="card-body ">
+                                
+                                <div class="tab-content ml-1 " id="myTabContent">
+                                  <div class="tab-pane fade show active" id="basicInfo" role="tabpanel"
+                                      aria-labelledby="basicInfo-tab">
+                                      <div class="row">
+                                        <div class="col-md-4">
+                                            <label class="lable_s">Channel </label>
+                                        </div>
+                                        <div class="col-md-8">
+                                          {{chanelEach.channel}}
+                                        </div> 
+                                      </div>
+                                      <hr>
+                                      <div class="row">
+                                        <div class="col-md-4">
+                                            <label class="lable_s">Activity Status</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                          <div class="form-group">
+                                            <label class="switch switch-label switch-primary">
+                                              <input type="checkbox" class="switch-input" [checked]="chanelEach.is_active"
+                                              (click)="toggleClickedChannel(chanelEach)" [disabled]="toggleDisable">
+                                            <span class="switch-slider" data-checked="On" data-unchecked="OFF"></span>
+                                            </label>
+                                          </div>
+                                          
+                                        </div>
+                                      </div>
+                                      <div class="form-group row float-right">
+                                        <!---->
+                                        <div class="col-6">
+                                          <div class="card" (click)="updateChannel(chanelEach)">
+                                            <div class="card-body p-3 clearfix">
+                                              <a type="button" (click)="updateChannel(chanelEach)" data-toggle="modal" class="btn btn-update add-user-rolls">Update</a>
+                                            </div>
+                                          </div>
+                                        </div><!---->
+              
+                                        <div class="col-6">
+                                          <div class="card" (click)="deleteChannelValues(chanelEach)">
+                                            <div class="card-body p-3 clearfix">
+                                              <a type="button" (click)="deleteChannelValues(chanelEach)" data-toggle="modal" class="btn btn-delete add-user-rolls">Delete</a>
+                                            </div>
+                                          </div>
+                                        </div><!---->
+              
+                                      </div>
+                                      <hr>
+                                  </div>
+                                </div>  
+                              
+                              </div>
+                              
+                            </div>
+                          </div>  
+
+                          </div>
+
+                        <br /><br />
+                    </div>
+                  </div>
+                </tab>
+              </tabset>
+              
+            </div>
+          </div>
+
+          <div *ngIf="is_loading">
+            <div colspan="6" class="text-center padding-top">
+              <div>
+                <div class="lds-spinner margin-top">
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+       </div><!--/.col-->
+     </div><!--/.row-->
   </div>
-  
+</div>
+
+<div bsModal #addMealModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+          <form  #addMealForm="ngForm" (ngSubmit)="onMealSubmit(addMealForm)" enctype="multipart/form-data" class="form-horizontal"> 
+              <div class="modal-header" >
+                  <h4 class="modal-title">Add Meals</h4>
+                  <button type="button" class="close" (click)="addMealModal.hide()" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <!--Body-->
+              <div class="modal-body">
+                  <div class="card-body">
+                   
+                      <div class="form-group">
+                          <label> Meal Name</label>
+                          <input type="text" required #mealName="ngModel" name="mealName" [ngModel]="mealObj.meal" [class.is-invalid]="mealName.invalid && mealName.touched" placeholder="Enter the meal name" class="form-control" ngModel>
+                          <small class="text-danger" [class.d-none]="mealName.valid || mealName.untouched">Meal name is required</small>
+                      </div>
+                      <div class="form-group">
+                          <label >Meal Price</label>
+                          <input type="text" required #mealPrice="ngModel" name="mealPrice" [ngModel]="mealObj.price" [class.is-invalid]="mealPrice.invalid && mealPrice.touched" placeholder="Enter the ticket price" class="form-control" ngModel>
+                          <small class="text-danger" [class.d-none]="mealPrice.valid || mealPrice.untouched">  Meal Price is required</small>
+                      </div>
+                      <div class="form-group">
+                          <label >Activity Status</label>
+                          <br>
+                          <label class="switch switch-label switch-primary">
+                            <input type="checkbox" #mealStatus="ngModel" name="mealStatus" class="switch-input" [ngModel]="mealObj.is_active"  ngModal>
+                            <span class="switch-slider" data-checked="On" data-unchecked="OFF"></span>
+                          </label>
+                          <small class="text-danger" [class.d-none]="mealStatus.valid || mealStatus.untouched">Activity is required</small>
+                      </div>
+                  </div>
+                  <div class="modal-footer" style="background: white;">
+                      <input data-dismiss="modal" type="button" class="btn btn-secondary"
+                          (click)="addMealModal.hide()" value="Cancel">
+                      <button type="submit" class="btn btn-primary" value="Save Ticket"  [disabled]= "addMealForm.form.invalid" [disabled]="clicked" >Save Meal</button>
+               </div>                  
+              </div>
+          </form>
+      </div>
+  </div>
+</div>
+
+<div bsModal #addMethodModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+          <form  #addMethodForm="ngForm" (ngSubmit)="onMethodSubmit(addMethodForm)" enctype="multipart/form-data" class="form-horizontal"> 
+              <div class="modal-header">
+                  <h4 class="modal-title">Add Methods</h4>
+                  <button type="button" class="close" (click)="addMethodModal.hide()" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <!--Body-->
+              <div class="modal-body">
+                  <div class="card-body">
+                     
+                      <div class="form-group">
+                          <label> Method Name</label>
+                          <input type="text" required #methodName="ngModel" name="methodName" [ngModel]="methodObj.method" [class.is-invalid]="methodName.invalid && methodName.touched" placeholder="Enter the method name" class="form-control" ngModel>
+                          <small class="text-danger" [class.d-none]="methodName.valid || methodName.untouched">Method name is required</small>
+                      </div>
+                      <div class="form-group">
+                        <label> Activity Status </label>
+                        <br>
+                        <label class="switch switch-label switch-primary">
+                          <input type="checkbox" #methodStatus="ngModel" name="methodStatus" class="switch-input" [ngModel]="methodObj.is_active" ngModal>
+                          <span class="switch-slider" data-checked="On" data-unchecked="OFF"></span>
+                        </label>
+                        <small class="text-danger" [class.d-none]="methodStatus.valid || methodStatus.untouched">Method Activity is required</small>
+                      </div>
+
+                  </div>
+                  <div class="modal-footer" style="background: white;">
+                      <input data-dismiss="modal" type="button" class="btn btn-secondary"
+                          (click)="addMethodModal.hide()" value="Cancel">
+                      <button type="submit" class="btn btn-primary" value="Save Method"  [disabled]= "addMethodForm.form.invalid" [disabled]="clicked">Save Method</button>
+               </div>                  
+              </div>
+          </form>
+      </div>
+  </div>
+</div>
+
+<div bsModal #addChannelModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+          <form  #addChannelForm="ngForm" (ngSubmit)="onChannelSubmit(addChannelForm)" enctype="multipart/form-data" class="form-horizontal"> 
+              <div class="modal-header">
+                  <h4 class="modal-title">Add Channel</h4>
+                  <button type="button" class="close" (click)="addChannelModal.hide()" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <!--Body-->
+              <div class="modal-body">
+                  <div class="card-body">
+                     
+                      <div class="form-group">
+                          <label> Channel Name</label>
+                          <input type="text" required #channelName="ngModel" name="channelName" [ngModel]="selected_channel_name" [class.is-invalid]="channelName.invalid && channelName.touched" placeholder="Enter the channel" class="form-control" ngModel>
+                          <small class="text-danger" [class.d-none]="channelName.valid || channelName.untouched">Channel name is required</small>
+                      </div>
+                      <div class="form-group">
+                        <label> Activity Status </label>
+                        <br>
+                        <label class="switch switch-label switch-primary">
+                          <input type="checkbox" #channelStatus="ngModel" name="channelStatus" class="switch-input" [ngModel]="channelObj.is_active" ngModal>
+                          <span class="switch-slider" data-checked="On" data-unchecked="OFF"></span>
+                        </label>
+                        <small class="text-danger" [class.d-none]="channelStatus.valid || channelStatus.untouched">Method Activity is required</small>
+                      </div>
+                  </div>
+                  <div class="modal-footer" style="background: white;">
+                      <input data-dismiss="modal" type="button" class="btn btn-secondary"
+                          (click)="addChannelModal.hide()" value="Cancel">
+                      <button type="submit" class="btn btn-primary" value="Save Channel"  [disabled]= "addChannelForm.form.invalid" [disabled]="clicked">Save Channel</button>
+               </div>                  
+              </div>
+          </form>
+      </div>
+  </div>
+</div>
+
+<div bsModal #deleteMethodModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form>
+        <div class="modal-header">
+          <h4 class="modal-title">Delete Method</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+            (click)="deleteMethodModal.hide()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Are you sure you need to delete the method?</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" (click)="deleteMethodModal.hide()">
+          <input type="submit" class="btn btn-primary" value="Yes" [disabled]="clicked" (click)="deleteMethod(selected_method.id); clicked=true;">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div bsModal #deleteMealModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form>
+        <div class="modal-header">
+          <h4 class="modal-title">Delete Meal</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+            (click)="deleteMealModal.hide()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Are you sure you need to delete the meal?</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" (click)="deleteMealModal.hide()">
+          <input type="submit" class="btn btn-primary" value="Yes" [disabled]="clicked" (click)="deleteMeal(selected_meal.id); clicked=true;">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div bsModal #deleteChanelModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form>
+        <div class="modal-header">
+          <h4 class="modal-title">Delete channel</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+            (click)="deleteChanelModal.hide()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Are you sure you need to delete the channel?</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" (click)="deleteChanelModal.hide()">
+          <input type="submit" class="btn btn-primary" value="Yes" [disabled]="clicked" (click)="deleteChannel(selected_channel.id); clicked=true;">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div bsModal #editMethodModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form #editMethodForm="ngForm" method="post" enctype="multipart/form-data" class="form-horizontal">
+        <div class="modal-header">
+          <h4 class="modal-title">Edit Method Details</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+            (click)="editMethodModal.hide()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group row">
+           <label class="col-md-3 col-form-label" for="text-input">Method Name:</label>
+            <div class="col-md-9">
+            <input type="text" class="form-control" #methodName="ngModel" [(ngModel)]="selected_method_name"
+              [ngModelOptions]="{standalone: true}" name="methodName" [value]="methodObj.method" required ngModel>
+              <small class="text-danger" [class.d-none]="methodName.valid || methodName.untouched">Please enter method name</small>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" (click)="editMethodModal.hide()">
+          <input type="submit" class="btn btn-primary" value="Save" [disabled]="editMethodForm.form.invalid" [disabled]="clicked" (click)="updateMethodObj(selected_method.id)">
+        </div>
+      </form>
+    </div>
+  </div>
+</div><!--Update-->
+
+<div bsModal #editMealModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form #editMealForm="ngForm" method="post" enctype="multipart/form-data" class="form-horizontal">
+        <div class="modal-header">
+          <h4 class="modal-title">Edit Meal</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+            (click)="editMealModal.hide()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group row">
+           <label class="col-md-3 col-form-label" for="text-input">Meal Name:</label>
+            <div class="col-md-9">
+            <input type="text" class="form-control" #mealName="ngModel" [(ngModel)]="selected_meal_name"
+              [ngModelOptions]="{standalone: true}" name="mealName" required ngModel>
+              <small class="text-danger" [class.d-none]="mealName.valid || mealName.untouched">Please enter meal name</small>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="text-input">Meal Price:</label>
+             <div class="col-md-9">
+             <input type="text" class="form-control" #mealPrice="ngModel" [(ngModel)]="selected_meal_price"
+               [ngModelOptions]="{standalone: true}" name="mealPrice"  required ngModel>
+               <small class="text-danger" [class.d-none]="mealPrice.valid || mealPrice.untouched">Please enter meal price </small>
+             </div>
+           </div>
+        </div>
+        <div class="modal-footer">
+          <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" (click)="editMealModal.hide()">
+          <input type="submit" class="btn btn-primary" value="Save" [disabled]="editMealForm.form.invalid" [disabled]="clicked" (click)="updateMealObj(selected_meal.id)">
+        </div>
+      </form>
+    </div>
+  </div>
+</div><!--Update-->
+
+<div bsModal #editChannelModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form #editChannelForm="ngForm" method="post" enctype="multipart/form-data" class="form-horizontal">
+        <div class="modal-header">
+          <h4 class="modal-title">Edit Channel Details</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+            (click)="editChannelModal.hide()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group row">
+           <label class="col-md-3 col-form-label" for="text-input">Channel Name:</label>
+            <div class="col-md-9">
+            <input type="text" class="form-control" #channelName="ngModel" [(ngModel)]="selected_channel_name"
+              [ngModelOptions]="{standalone: true}" name="channelName"  required ngModel>
+              <small class="text-danger" [class.d-none]="channelName.valid || channelName.untouched">Please enter channel name</small>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" (click)="editChannelModal.hide()">
+          <input type="submit" class="btn btn-primary" value="Save" [disabled]="editChannelForm.form.invalid" [disabled]="clicked" (click)="updateChannelObj(selected_channel.id)">
+        </div>
+      </form>
+    </div>
+  </div>
+</div><!--Update-->

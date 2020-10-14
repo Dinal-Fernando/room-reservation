@@ -26,6 +26,7 @@ import { formatTimeZoneOffset } from '@fullcalendar/core/datelib/formatting';
 import { analyzeAndValidateNgModules, identifierModuleUrl } from '@angular/compiler';
 import { stringify } from 'querystring';
 import { getInterpolationArgsLength } from '@angular/compiler/src/render3/view/util';
+import { convertActionBinding } from '@angular/compiler/src/compiler_util/expression_converter';
 
 declare var $:any;
 @Component({
@@ -135,7 +136,7 @@ export class DayComponent implements OnInit {
       selected_event_id: any;
       selected_check_cancelled: any;
       detailsForm:FormGroup;
-      sum: number;
+      sum : number;
       reservation_date: any;
       roomy
       selectedOption: any;
@@ -143,7 +144,24 @@ export class DayComponent implements OnInit {
       selected_add_reason: any;
       checkoutDisabled: any;
       showEvents: boolean;
+  
+      mealList: any[];
+      channelList: any[];
+      methodList: any[];
+      selectedItemsList: any;
+      checkedIDs: any[];
     
+      channelNumber 
+      methodNumber: number;
+      amountNumber: any;
+      phoneNumber: number;
+      checkedList: any[]=[];
+      mealName: any;
+      mealPrice: any;
+      selected_meal  = [];
+      empIndex: any = 0;
+      selected_meal_array: any;
+
       constructor(
         private roomService:RoomsService,
         private router: Router,
@@ -159,8 +177,10 @@ export class DayComponent implements OnInit {
         phone: ["", Validators.required],
         nic: ["", Validators.required],
         email:["", Validators.required],
-        details :this.fb.array([this.newDetail()]),
-        total:["", Validators.required]
+        total:["", Validators.required],
+        channel:["", Validators.required],
+        method:["", Validators.required],
+        amount: ["", Validators.required]
         });
       }
 
@@ -168,30 +188,84 @@ export class DayComponent implements OnInit {
         this.innerWidth = window.innerWidth;
         this.getRoomsList();
         this.getEventList(); 
-        console.log(this.roomy);
+        this.getMealsList();
+        this.getMethodList();
+        this.getChannelList();
+        //console.log(this.roomy);
+        //this.cd.detectChanges();
+        // this.fetchSelectedItems();
+        // this.fetchCheckedIDs();
       }
     
-     details(): FormArray {
+      details(): FormArray {
         return this.detailsForm.get("details") as FormArray
       }
 
+      detailsMeals(empIndex:number) : FormArray {       
+        return this.details().at(empIndex).get("meals") as FormArray
+      }
+
+      checked : boolean;
       newDetail(): FormGroup {
         return this.fb.group({
-          room: ['', Validators.compose([Validators.required])],
-          checkin    : ['', Validators.compose([Validators.required])],
-          checkout   : ['', Validators.compose([Validators.required])],
-          price      : ['', Validators.compose([Validators.required])],
+          room     : ['', Validators.compose([Validators.required])],
+          checkin  : ['', Validators.compose([Validators.required])],
+          checkout : ['', Validators.compose([Validators.required])],
+          price    : ['', Validators.compose([Validators.required])],
+          adults   : ['', Validators.compose([Validators.required])],
+          children : ['', Validators.compose([Validators.required])],
+          meals    :  this.fb.array([])})
+      }
+
+      newDetail2(empIndex): FormGroup {
+        return this.fb.group({
+          room     : ['', Validators.compose([Validators.required])],
+          checkin  : ['', Validators.compose([Validators.required])],
+          checkout : ['', Validators.compose([Validators.required])],
+          price    : ['', Validators.compose([Validators.required])],
+          adults   : ['', Validators.compose([Validators.required])],
+          children : ['', Validators.compose([Validators.required])],
+          meals    :  this.detailsMeals(empIndex)})
+      }
+      
+      getList() {
+        if (this.mealList) {
+          console.log(this.details.length + " details");
+          for(let j=0; j <1; j++){
+            for(let i=0; i<this.mealList.length; i++){
+              let ccc = this.mealList[i]
+              console.log(ccc.meal + "mealList")
+              this.addMeals(j, ccc.meal, ccc.price)
+            }
+          }
+        } 
+      }
+
+      newMeal(meal, price):FormGroup{
+        return this.fb.group({
+          meal     : [ meal, Validators.compose([Validators.required])],
+          price    : [ price, Validators.compose([Validators.required])]
         });
       }
 
-      currentPageLoad() {
-        this.router.navigateByUrl('/').then(
-          () => {this.router.navigateByUrl('/bookings/day');});
+      addMeals(empIndex:number, meal, price) {
+         this.detailsMeals(empIndex).push(this.newMeal(meal,price));
+      }
+  
+      getMeal(empIndex:number, meal, price){
+        this.detailsMeals(empIndex).push(this.newMeal(meal,price));
       }
 
-      addDetail() {
+      currentPageLoad() {
+        this.router.navigate(['/bookings/day']);
+        // this.router.navigateByUrl('/').then(
+        //   () => {this.router.navigateByUrl('/bookings/day');});
+      }
+
+      addDetail(empIndex) {
         console.log("Adding a detail");
-        this.details().push(this.newDetail());
+        // this.getList()
+        this.details().push(this.newDetail2(empIndex));
       }
      
       removeDetail(empIndex:number) {
@@ -205,6 +279,10 @@ export class DayComponent implements OnInit {
         const formGroup = this.details().controls[index] as FormGroup;
         return formGroup;
       }
+
+      getQuestions(form) {
+         return form.controls.meals.controls;
+       }
 
       changedFieldType(index) {
        console.log(this.detailsForm.value);
@@ -230,8 +308,7 @@ export class DayComponent implements OnInit {
 
       toggleClickedCheckOut(event){
         if(this.selected_check_checkedout){
-          alert("Client is already checked out. Checkout cannot be undone.")
-          
+          alert("Client is already checked out. Checkout cannot be undone.")     
         }else{
         this.is_loading = true
         console.log(event)
@@ -254,19 +331,76 @@ export class DayComponent implements OnInit {
           this.detailModal.hide();
         }
       }
-
+      
       toggleClickedCancel(){
         if(this.selected_check_cancelled){
           alert("Oops !The booking is already cancelled!!");   
-        }else{
+        }else{ 
         this.show = !this.show;
         }
+      }
+ 
+      onCheckChange(empIndex,order, id, det, menu, price, event){
+        console.log("Menu")
+        console.log(menu)
+        console.log(id)
+    
+        if(event.target.checked){
+          if(order.value.meal === true && order.value.price === ""){
+            this.mealName  = menu
+            this.mealPrice = price
+          }else if(order.value.meal === true && order.value.price === !null ){
+            this.mealName  = menu
+            this.mealPrice = order.value.price
+          }
+        } else {
+        // for(var i=0 ; i < this.mealList.length; i++) {
+        //   if(this.checkedList[i] == order.value.id) {
+        //     this.checkedList.splice(i,1);
+        //  }
+        // }
+       }
+        console.log(this.checkedList);
+    }
+     
+        // const checkboxControl = (this.checkboxGroup.controls.checkboxes as FormArray);
+        // const formValue = { 
+        //   ...this.checkboxGroup.value,
+        //   checkboxes: checkboxControl.value.filter(value => !!value)
+        // }
+        // // this.submittedValue = formValue;
+        // const formArray: FormArray = this.meals.get('myChoices') as FormArray;
+      
+        // /* Selected */
+        // if(event.target.checked){
+        //   // Add a new control in the arrayForm
+        //   formArray.push(new FormControl(event.target.value));
+        // }
+        // /* unselected */
+        // else{
+        //   // find the unselected element
+        //   let i: number = 0;
+      
+        //   formArray.controls.forEach((ctrl: FormControl) => {
+        //     if(ctrl.value == event.target.value) {
+        //       // Remove the unselected element from the arrayForm
+        //       formArray.removeAt(i);
+        //       return;
+        //     }
+      
+        //     i++;
+        //   });
+    
+      
+      onChangeClick(event){
+        console.log("Event click");
+        console.log(event);
       }
 
       cancelReason(selectedID){
         this.is_loading = true
         let model={
-          id :selectedID,
+          id           :selectedID,
           cancel_reason:this.selected_add_reason
         }
         if (confirm('Are you sure you want to cancel booking ? Note: This cannot be undone!')) {
@@ -291,22 +425,83 @@ export class DayComponent implements OnInit {
             this.roomService.getRooms(1, 1000).then(
               res => {
                 if (res['success']) {
+                  this.is_loading = false
                   this.resourcelist = res['data'];
                   for(var i = 0; i < this.resourcelist.length; i++) {
                     if (this.resourcelist[i].is_active == true) {
                       this.roomList.push(this.resourcelist[i]);
                     }
                   }               
-                  console.log( this.roomList);
                   return this.roomList;         
                 }
               },
               err => {        
-                console.log(err);
+                console.log(err) ;
               }
             );      
+          }
+
+        getMealsList() {
+          this.roomService.getMeals().then(
+            res => {
+              if (res['success']) {
+                this.mealList = res['data'];
+                this.getList()        
+              }
+            },
+            err => {        
+              console.log(err);
+            }
+          );      
         }
 
+        getChannelList() {
+          this.roomService.getChannel().then(
+            res => {
+              if (res['success']) {
+                this.channelList = res['data'];
+                return this.channelList;         
+              }
+            },
+            err => {        
+              console.log(err);
+            }
+          );      
+        }
+
+        getMethodList(){
+          this.roomService.getMethods().then(
+            res => {
+              if (res['success']) {
+                this.methodList = res['data'];
+                return this.methodList;         
+              }
+            },
+             err => {        
+              console.log(err);
+            }
+          );      
+        }
+
+        changeSelection() {
+          this.fetchSelectedItems(); 
+        }
+
+        fetchSelectedItems() {
+          this.selectedItemsList = this.mealList.filter((value, index) => {
+            return value.isChecked
+          });
+        }
+      
+        fetchCheckedIDs() {
+          this.checkedIDs = []
+          this.mealList.forEach((value, index) => {
+            if (value.isChecked) {
+              this.checkedIDs.push(value.id);
+            }
+          });
+        }
+        
       getCheckInTIme(index){
         this.showEvents = true
         this.formloader = true 
@@ -450,7 +645,7 @@ export class DayComponent implements OnInit {
           );
         }
         
-        this.bookingService.getRoomEventsById(event).then(
+        this.bookingService.getRoomEventsById(id).then(
           res => {
             if (res['success']) {
               this.is_loading = false;
@@ -486,18 +681,9 @@ export class DayComponent implements OnInit {
     get mobile() { return this.detailsForm.get('phone'); }
     get email() { return this.detailsForm.get('email'); }
 
-
-    public processForm( form: any ) : void {    
+   processForm( ) : void {    
       let intDate = +new Date()
       this.is_loading = true
-      console.warn( "Handling form submission!" );
-     
-      console.group( "Form Data" );
-      console.log( this.detailsForm.value );
-      console.groupEnd();
-   
-      console.group( "Form Model" );
-      console.groupEnd();
 
       var client_name = this.detailsForm.value.client_name
       var nic = this.detailsForm.value.nic
@@ -505,19 +691,20 @@ export class DayComponent implements OnInit {
       var countryCode = mobilee.dialCode;
       var phonee = mobilee.number.replace(/\s/g, ""); ;
       var emailAddress =this.detailsForm.value.email;
-      
-      console.log("sds"+phonee)
-      console.log( this.details())
-      let Form = JSON.stringify(this.details);
-      console.log(this.detailsForm.value.details);
 
-      
-    //   for(let i = 0; i<this.details().length; i++){ 
-    //     if(this.details().at(i).get('checkin')  <this.details().at(i+1).get('checkin')){
-    //       this.reservation_date = this.details().at(i).get('checkin')
-    //     }
-    //  } 
+      var channel = this.detailsForm.value.channel 
+      this.channelNumber = Number(channel);
 
+      var method = this.detailsForm.value.method 
+      this.methodNumber = Number(method);
+      
+      var amount = this.detailsForm.value.amount
+      this.amountNumber = Number(amount);
+
+      this.phoneNumber = Number(phonee);
+
+      console.log( this.detailsForm.value.details)
+    
       let model ={
         "client":{
           name: client_name,
@@ -528,21 +715,26 @@ export class DayComponent implements OnInit {
         },
         "reservation":{
            checkin: this.details().at(0).get('checkin').value,
-           total  : this.sum
+           total  : this.sum,
+           channel : this.channelNumber
         },
-        "detail":this.detailsForm.value.details
+        "payments":{
+          method : this.methodNumber,
+          amount  :this.amountNumber
+        },
+        "detail": this.detailsForm.value.details
       }
-
+      console.log(model)
       this.bookingService.saveBookings(model).then(
         res => {
           if (res['success']) {
-            this.is_loading = false 
+            this.is_loading = false;
             this.detailsForm.reset();  
             this.largeModal.hide();
             this.toastr.success('Successfully Added!');    
             this.currentPageLoad();
           } else {
-            this.is_loading= false
+            this.is_loading= false;
             this.toastr.error('Oops! Can not add bookings at this moment please try again later');
           }
         },
@@ -560,16 +752,15 @@ export class DayComponent implements OnInit {
       res => {
         if (res && res['success']) {
           this.is_loading = false
-          console.log("Its a success"); 
-          console.log(res['data']);
+         
           this.BookingsList = res['data'];
-          console.log("22");
+          
           this.BookingsList.forEach(data=>{
             data.details.forEach(detailslist=>{
               this.DetailsList.push(detailslist); 
             });
           });
-          console.log(this.DetailsList);
+         
           this.calendarEvents= this.DetailsList;
           return this.DetailsList;
         }
@@ -676,8 +867,34 @@ export class DayComponent implements OnInit {
     this.detailModal.hide();
     this.activeModal.show();
   }
+
   collaps(empIndex:number){
     this.isCollapsed[empIndex] = !this.isCollapsed[empIndex]
+  }
+  
+  checkChange(j , empIndex,mealList, test){
+    console.log("Work")
+    
+    for(let i=0; i<= empIndex ; i++){
+      let selected =[]
+        if(test){
+          console.log(mealList.meal);
+          let obj = {
+            "meal" : mealList.id,
+            "price" :mealList.price
+          }
+
+          let formdata = this.detailsForm.value.details[i]
+          this.selected_meal.push(obj)
+          formdata["meals"] =  this.selected_meal
+          // this.selected_meal_array[empIndex]  = this.selected_meal[empIndex] 
+          console.log(this.selected_meal)
+
+        }else{
+          this.selected_meal.splice(j,1);   
+        }
+      console.log( i)
+    }
   }
 
 }

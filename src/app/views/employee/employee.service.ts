@@ -23,7 +23,7 @@ export class EmployeeService {
     }
 
     verifyUser(user){
-      return this.commonService.postData('user/varify/', user);
+      return this.commonService.postLoginData('user/varify/', user);
     }
 
     updateUser(user){
