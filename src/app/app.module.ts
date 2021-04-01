@@ -73,6 +73,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     AppAsideModule,
     AppBreadcrumbModule.forRoot(),
     AppFooterModule,
+    HttpModule,
     AppHeaderModule,
     AppSidebarModule,
     PerfectScrollbarModule,
