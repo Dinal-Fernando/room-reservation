@@ -97,7 +97,7 @@ import { MatTabsModule } from '@angular/material/tabs';
   ],
   declarations: [
     AppComponent,
-  
+    DefaultLayoutComponent,
     P404Component,
     P500Component,
     LoginComponent,
