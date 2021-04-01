@@ -982,3 +982,4 @@ export class DayNewComponent implements OnInit {
     this.detailsForm.reset();
   }
 }
+//something
