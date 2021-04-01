@@ -7,7 +7,6 @@ import { Calendar } from '@fullcalendar/core';
 import listPlugin from '@fullcalendar/list';
 import { EventInput } from '@fullcalendar/core';
 import { __param } from 'tslib';
-//some
 import timeGrigPlugin from '@fullcalendar/timegrid';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import { OptionsManager } from '@fullcalendar/core/OptionsManager';
@@ -19,7 +18,7 @@ import { ToastrService } from 'ngx-toastr';
 import { BookingsService } from '../bookings.service';
 import { OWL_DATE_TIME_LOCALE } from 'ng-pick-datetime';
 import { InputElement } from './inputElements';
-import { SearchCountryField, TooltipLabel, CountryISO } from 'ngx-intl-tel-input';
+import { SearchCountryField, CountryISO } from 'ngx-intl-tel-input';
 import bootstrapPlugin from '@fullcalendar/bootstrap';
 import { formatTimeZoneOffset } from '@fullcalendar/core/datelib/formatting';
 import { analyzeAndValidateNgModules, identifierModuleUrl } from '@angular/compiler';
@@ -109,7 +108,7 @@ export class DayNewComponent implements OnInit {
 
     separateDialCode = true;
     SearchCountryField = SearchCountryField;
-    TooltipLabel = TooltipLabel;
+ 
     CountryISO = CountryISO;
     preferredCountries: CountryISO[] = [CountryISO.UnitedStates, CountryISO.UnitedKingdom];
 
