@@ -7,7 +7,7 @@ import { BookingsService } from '../bookings/bookings.service';
 import {formatDate} from '@angular/common';
 import { DatePipe } from '@angular/common';
 import * as jsPDF from 'jspdf'
-import { Node, Options } from 'ng-material-treetable';
+
 import * as moment from 'moment';
 import { TreeNode } from 'primeng/primeng'
 
@@ -34,7 +34,6 @@ export class ReportsComponent implements OnInit {
   dataList: any[]=[];
   private _data: any;
 
-  singleRootTree: Node<any>[];
   is_show_table = false
   reports= [];
   reportsDetailsList: any[]=[];
@@ -167,13 +166,13 @@ export class ReportsComponent implements OnInit {
       );
     }
    
-    treeOptions: Options<any> = {
-      capitalisedHeader: true,
-      highlightRowOnHover: true,
-      customColumnOrder: [
-        'client', 'date', 'title', 'start', 'end','price', 'total'
-      ]
-    };
+    // treeOptions: Options<any> = {
+    //   capitalisedHeader: true,
+    //   highlightRowOnHover: true,
+    //   customColumnOrder: [
+    //     'client', 'date', 'title', 'start', 'end','price', 'total'
+    //   ]
+    // };
 
     addDuration() {
       this.is_loading= true;
@@ -210,9 +209,9 @@ export class ReportsComponent implements OnInit {
       console.log(row.id)
     }
     
-    logNode(node: Node<any>) {
-      console.log(node);
-    }
+    // logNode(node: Node<any>) {
+    //   console.log(node);
+    // }
 }
 
 

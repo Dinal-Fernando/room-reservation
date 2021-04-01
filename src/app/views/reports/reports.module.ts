@@ -12,8 +12,8 @@ import { NgxLoadingModule } from 'ngx-loading';
 
 import {DpDatePickerModule} from 'ng2-date-picker';
 import { TreeNode } from 'primeng/primeng';
-import { Node, Options } from 'ng-material-treetable';
-import { TreetableModule } from 'ng-material-treetable';
+// import { Node, Options } from 'ng-material-treetable';
+// import { TreetableModule } from 'ng-material-treetable';
 
 @NgModule({
   imports: [
@@ -26,7 +26,7 @@ import { TreetableModule } from 'ng-material-treetable';
     NgxPaginationModule,
     ToastrModule.forRoot(),
     DpDatePickerModule,
-    TreetableModule,
+    // TreetableModule,
     NgxLoadingModule
   ],
   declarations: [ ReportsComponent ]

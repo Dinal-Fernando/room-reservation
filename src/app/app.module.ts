@@ -47,7 +47,7 @@ import { AddEmployeeComponent } from './views/employee/add-employee.component';
 import { SettingsComponent } from './views/settings/settings.component';
 import { ReportsComponent } from './views/reports/reports.component';
 import {Ng2TelInputModule} from 'ng2-tel-input';
-import { TreetableModule } from 'ng-material-treetable';
+
 //import { OwlDateTimeModule, OWL_DATE_TIME_FORMATS} from 'ng-pick-datetime';
 import { OwlMomentDateTimeModule } from 'ng-pick-datetime-moment';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
@@ -89,7 +89,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     HttpClientModule,
     FormsModule,
     HttpModule,
-    TreetableModule,
+
     NgxPaginationModule,
     NgxLoadingModule,
     MatTabsModule,
@@ -97,7 +97,7 @@ import { MatTabsModule } from '@angular/material/tabs';
   ],
   declarations: [
     AppComponent,
-    ...APP_CONTAINERS,
+  
     P404Component,
     P500Component,
     LoginComponent,
