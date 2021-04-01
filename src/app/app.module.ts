@@ -54,7 +54,7 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
 import { CategoryComponent } from './views/category/category.component';
 import { FormsModule }   from '@angular/forms';
 import {NgxPaginationModule} from 'ngx-pagination';
-// import { CoreModule } from './core/core.module';
+
 import { NgxLoadingModule } from 'ngx-loading';
 import { ToastrModule } from 'ngx-toastr';
 import { CommonServicesService } from './services/common-services.service';
@@ -70,7 +70,6 @@ import { MatTabsModule } from '@angular/material/tabs';
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    //TooltipModule.forRoot(),
     AppAsideModule,
     AppBreadcrumbModule.forRoot(),
     AppFooterModule,
@@ -88,8 +87,6 @@ import { MatTabsModule } from '@angular/material/tabs';
     OwlNativeDateTimeModule,
     HttpClientModule,
     FormsModule,
-    HttpModule,
-
     NgxPaginationModule,
     NgxLoadingModule,
     MatTabsModule,
