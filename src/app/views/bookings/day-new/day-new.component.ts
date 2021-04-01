@@ -7,7 +7,6 @@ import { Calendar } from '@fullcalendar/core';
 import listPlugin from '@fullcalendar/list';
 import { EventInput } from '@fullcalendar/core';
 import { __param } from 'tslib';
-// something
 import timeGrigPlugin from '@fullcalendar/timegrid';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 import { OptionsManager } from '@fullcalendar/core/OptionsManager';
