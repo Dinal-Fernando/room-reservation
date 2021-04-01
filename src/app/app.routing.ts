@@ -12,7 +12,13 @@ import { AddSpacceComponent } from './views/add-space/add-spacce.component';
 //import { DashboardComponent } from './views/dashboard/dashboard.component';
 import { AuthGuard } from './core/auth.guard';
 export const routes: Routes = [
- 
+  {
+    path: '',
+    component: LoginComponent,
+    data: {
+      title: 'Login Page'
+    }
+  },
   {
     path: '404',
     component: P404Component,
@@ -54,7 +60,7 @@ export const routes: Routes = [
         data: {
           title: ''
         },
-        //canActivate: [AuthGuard]
+        canActivate: [AuthGuard]
       },
       {
         path: 'base',
@@ -71,7 +77,8 @@ export const routes: Routes = [
       },
       {
         path: 'dashboard',
-        loadChildren: () => import('./views/dashboard/dashboard.module').then(m => m.DashboardModule)
+        loadChildren: () => import('./views/dashboard/dashboard.module').then(m => m.DashboardModule),
+        canActivate: [AuthGuard]
       },
       {
         path: 'icons',
@@ -92,32 +99,32 @@ export const routes: Routes = [
       {
         path: 'bookings',
         loadChildren: () => import('./views/bookings/bookings.module').then(m => m.BookingsModule),
-        //canActivate: [AuthGuard]
+        canActivate: [AuthGuard]
       },
       {
         path: 'add-space',
         loadChildren: () => import('./views/add-space/add-space.module').then(m => m.AddSpacceModule),
-        //canActivate: [AuthGuard]
+        canActivate: [AuthGuard]
       },
       {
         path: 'settings',
         loadChildren: () => import('./views/settings/settings.module').then(m => m.SettingsModule),
-        //canActivate: [AuthGuard]
+        canActivate: [AuthGuard]
       },
       {
         path: 'reports',
         loadChildren: () => import('./views/reports/reports.module').then(m => m.ReportsModule),
-        //canActivate: [AuthGuard]
+        canActivate: [AuthGuard]
       },
       {
         path: 'employee',
         loadChildren: () => import('./views/employee/employee.module').then(m => m.EmployeeModule),
-        //canActivate: [AuthGuard]
+        canActivate: [AuthGuard]
       },
       {
         path: 'category',
         loadChildren: () => import('./views/category/category.module').then(m => m.CategoryModule),
-        //canActivate: [AuthGuard]
+        canActivate: [AuthGuard]
       }
     ]
   },
